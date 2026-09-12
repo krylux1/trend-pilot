@@ -69,3 +69,41 @@ body {
     .button:active {
         transform: scale(0.97);
     }
+    .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 50px;
+    }
+
+    .saved-tittle {
+         margin-bottom: 20px;  
+    }
+    .saved-ideas {
+         display: flex;
+         flex-direction: column;
+         gap: 20px;
+
+         padding: 10px;
+
+         border: 1px solid #333;
+         border-radius: 8px;
+        }
+.delete-button {
+    flex-shrink: 0;
+
+    padding: 8px 12px;
+
+    border: 1px solid #555;
+    border-radius: 6px;
+
+    background: transparent;
+    color: #fff;
+
+    cursor: pointer;
+}
+
+.delete-button:hover {
+     background: #fff;
+     color: #000;
+}
