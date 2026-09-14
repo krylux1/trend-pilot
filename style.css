@@ -107,3 +107,85 @@ body {
      background: #fff;
      color: #000;
 }
+
+.telegram-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 8px 13px;
+
+    border: 1px solid #333;
+    border-radius: 7px;
+
+    background: #111;
+    color: #fff;
+
+    text-decoration: none;
+    font-size: 14px;
+
+    transition: 0.2s ease;
+}
+
+.telegram-button:hover {
+    background: #fff;
+    color: #000;
+}
+
+.telegram-icon {
+    font-size: 14px;
+}
+
+.telegram-promo {
+    margin-top: 50px;
+    padding: 30px 25px;
+
+    text-align: center;
+
+    border: 1px solid #333;
+    border-radius: 12px;
+
+    background: #111;
+}
+
+.telegram-promo__title {
+    margin-bottom: 10px;
+
+    font-size: 22px;
+    line-height: 1.4;
+}
+
+.telegram-promo__text {
+    margin-bottom: 20px;
+
+    color: #aaa;
+    font-size: 16px;
+}
+
+.telegram-promo__button {
+    display: inline-block;
+
+    padding: 12px 22px;
+
+    border-radius: 7px;
+
+    background: #fff;
+    color: #000;
+
+    text-decoration: none;
+    font-weight: 600;
+
+    transition: 0.2s ease;
+}
+
+.telegram-promo__button:hover {
+    background: #ddd;
+}
+
+.telegram-promo__button:active {
+    transform: scale(0.97);
+}
