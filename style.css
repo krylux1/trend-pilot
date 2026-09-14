@@ -137,7 +137,9 @@ body {
 }
 
 .telegram-icon {
-    font-size: 14px;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
 }
 
 .telegram-promo {
@@ -188,4 +190,13 @@ body {
 
 .telegram-promo__button:active {
     transform: scale(0.97);
+}
+@media (max-width: 600px) {
+    .telegram-button {
+        position: static;
+
+        width: fit-content;
+        margin: 15px auto;
+    }
+
 }
