@@ -252,3 +252,8 @@ body {
 .saved-title {
     margin-bottom: 20px;
 }
+@media (max-width: 600px){
+    body {
+    padding-top: 80px;
+    }
+}
