@@ -276,3 +276,37 @@ body {
     opacity: 0.6;
     cursor: default;
 }
+
+.saved-idea__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.saved-idea__text {
+    flex: 1;
+    text-align: left;
+}
+
+.saved-idea__text:hover {
+    color: #aaa;
+}
+
+.saved-details {
+    margin-top: 12px;
+    padding: 12px;
+    border-left: 2px solid #333;
+    font-size: 14px;
+    color: #bbb;
+    line-height: 1.5;
+    text-align: left;
+}
+
+.saved-details p {
+    margin-bottom: 8px;
+}
+
+.saved-details strong {
+    color: #fff;
+}

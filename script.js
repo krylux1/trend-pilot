@@ -296,18 +296,47 @@ function renderSavedIdeas() {
     savedIdeas.forEach((idea, index) => {
         const ideaItem = document.createElement("div");
         ideaItem.classList.add("saved-idea");
-        const ideaText = document.createElement("span");
+
+        const topRow = document.createElement("div");
+        topRow.classList.add("saved-idea__row");
+
+        const ideaText = document.createElement("div");
+        ideaText.classList.add("saved-idea__text");
         ideaText.textContent = typeof idea === "string" ? idea : idea.text;
+        if (typeof idea === "object") {
+            ideaText.style.cursor = "pointer";
+            ideaText.title = "Нажми, чтобы раскрыть";
+        }
+
+        const details = document.createElement("div");
+        details.classList.add("saved-details");
+        details.style.display = "none";
+        if (typeof idea === "object") {
+            details.innerHTML = `
+                <p><strong>Почему:</strong> ${idea.why}</p>
+                <p><strong>Как:</strong> ${idea.how}</p>
+                <p><strong>Хук:</strong> ${idea.hook}</p>
+            `;
+        }
+
+        ideaText.addEventListener("click", () => {
+            details.style.display = details.style.display === "none" ? "block" : "none";
+        });
+
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Удалить";
         deleteButton.classList.add("delete-button");
-        deleteButton.addEventListener("click", () => {
+        deleteButton.addEventListener("click", (e) => {
+            e.stopPropagation();
             savedIdeas.splice(index, 1);
             localStorage.setItem(SAVED_IDEAS_KEY, JSON.stringify(savedIdeas));
             renderSavedIdeas();
         });
-        ideaItem.appendChild(ideaText);
-        ideaItem.appendChild(deleteButton);
+
+        topRow.appendChild(ideaText);
+        topRow.appendChild(deleteButton);
+        ideaItem.appendChild(topRow);
+        ideaItem.appendChild(details);
         savedIdeasElement.appendChild(ideaItem);
     });
 }
