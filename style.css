@@ -219,3 +219,60 @@ body {
 .saved-title {
     margin-bottom: 20px;
 }
+
+/* Блок идеи с полями */
+.idea {
+    display: block;
+    text-align: left;
+    padding: 20px;
+    border: 1px solid #222;
+    border-radius: 10px;
+    background: #0a0a0a;
+}
+
+.idea-text {
+    font-size: 24px;
+    margin-bottom: 16px;
+    line-height: 1.3;
+}
+
+.idea-why,
+.idea-how,
+.idea-hook {
+    font-size: 15px;
+    color: #bbb;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.idea-why strong,
+.idea-how strong,
+.idea-hook strong {
+    color: #fff;
+}
+
+.feedback {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.fb-btn {
+    padding: 8px 16px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    background: transparent;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.fb-btn:hover {
+    border-color: #fff;
+}
+
+.fb-btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
