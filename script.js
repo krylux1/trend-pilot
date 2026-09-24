@@ -278,12 +278,14 @@ function renderIdea(idea) {
             localStorage.setItem(FEEDBACK_KEY, JSON.stringify(feedback));
 
             // Аналитика: тип + голос + первые 40 символов идеи
-            if (window.goatcounter && window.goatcounter.count) {
-                window.goatcounter.count({
-                    path: 'feedback_' + btn.dataset.fb + '_' + idea.type + '_' + encodeURIComponent(idea.text.slice(0, 40)),
-                    event: true
-                });
-            }
+              if (window.goatcounter && window.goatcounter.count) {
+              const ideaIndex = ideas.findIndex(i => i.text === idea.text);
+              window.goatcounter.count({
+              path: 'fb_' + btn.dataset.fb + '_' + idea.type + '_' + ideaIndex,
+              title: idea.text,
+               event: true
+            });
+        }
 
             btn.textContent = btn.dataset.fb === "up" ? "👍 Спасибо!" : "👎 Понял";
             btn.disabled = true;
