@@ -278,7 +278,7 @@ function renderIdea(idea) {
             feedback.push({ text: idea.text, vote: btn.dataset.fb, date: today });
             localStorage.setItem(FEEDBACK_KEY, JSON.stringify(feedback));
             if (window.goatcounter && window.goatcounter.count) {
-                window.goatcounter.count({ path: 'feedback_' + btn.dataset.fb + '_' + idea.type, event: true });
+                window.goatcounter.count({ path: 'feedback_' + btn.dataset.fb + '_' + idea.type + '_' + encodeURIComponent(idea.text.slice(0, 30)), event: true });
             }
             btn.textContent = btn.dataset.fb === "up" ? "👍 Спасибо!" : "👎 Понял";
             btn.disabled = true;
