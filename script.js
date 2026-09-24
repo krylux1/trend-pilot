@@ -271,15 +271,20 @@ function renderIdea(idea) {
             </div>
         </div>
     `;
-    // Кнопки обратной связи
     ideaElement.querySelectorAll(".fb-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             const feedback = JSON.parse(localStorage.getItem(FEEDBACK_KEY)) || [];
             feedback.push({ text: idea.text, vote: btn.dataset.fb, date: today });
             localStorage.setItem(FEEDBACK_KEY, JSON.stringify(feedback));
+
+            // Аналитика: тип + голос + первые 40 символов идеи
             if (window.goatcounter && window.goatcounter.count) {
-                window.goatcounter.count({ path: 'feedback_' + btn.dataset.fb + '_' + idea.type + '_' + encodeURIComponent(idea.text.slice(0, 30)), event: true });
+                window.goatcounter.count({
+                    path: 'feedback_' + btn.dataset.fb + '_' + idea.type + '_' + encodeURIComponent(idea.text.slice(0, 40)),
+                    event: true
+                });
             }
+
             btn.textContent = btn.dataset.fb === "up" ? "👍 Спасибо!" : "👎 Понял";
             btn.disabled = true;
         });
