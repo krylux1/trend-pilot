@@ -337,8 +337,9 @@ function renderIdea(idea) {
 function renderSavedIdeas() {
     savedIdeasElement.innerHTML = "";
 
-    // Если юзер не вошёл — показываем кнопку входа
     const auth = window.FirebaseAPI?.auth;
+
+    // 1. Если юзер НЕ вошёл — показываем кнопку входа
     if (!auth || !auth.currentUser) {
         savedIdeasElement.innerHTML = `
             <p style="color:#888; margin-bottom:12px;">Войди, чтобы сохранять идеи.</p>
@@ -358,33 +359,41 @@ function renderSavedIdeas() {
         return;
     }
 
-    // Дальше — старый код (юзер вошёл)
-    if (savedIdeas.length === 0) {
-        savedIdeasElement.textContent = "Пока нет сохранённых идей";
-
-            // Юзер вошёл — показываем имя и кнопку "Выйти"
+    // 2. Юзер вошёл — показываем имя и "Выйти"
     const user = auth.currentUser;
     const header = document.createElement("div");
     header.classList.add("user-header");
-    header.innerHTML = `
-        <span class="user-name">${user.displayName || user.email}</span>
-        <button class="logout-btn" id="logoutInline">Выйти</button>
-    `;
+
+    const userName = document.createElement("span");
+    userName.classList.add("user-name");
+    userName.textContent = user.displayName || user.email || "Пользователь";
+
+    const logoutBtn = document.createElement("button");
+    logoutBtn.classList.add("logout-btn");
+    logoutBtn.textContent = "Выйти";
+    logoutBtn.addEventListener("click", async () => {
+        const { signOut } = window.FirebaseAPI;
+        try {
+            await signOut(auth);
+        } catch (e) {
+            console.error("Ошибка выхода:", e.message);
+        }
+    });
+
+    header.appendChild(userName);
+    header.appendChild(logoutBtn);
     savedIdeasElement.appendChild(header);
 
-    const logoutBtn = document.getElementById("logoutInline");
-    if (logoutBtn) {
-        logoutBtn.addEventListener("click", async () => {
-            const { signOut } = window.FirebaseAPI;
-            try {
-                await signOut(auth);
-            } catch (e) {
-                console.error("Ошибка выхода:", e.message);
-            }
-        });
-    }
+    // 3. Если идей нет — сообщение
+    if (savedIdeas.length === 0) {
+        const empty = document.createElement("div");
+        empty.style.color = "#888";
+        empty.textContent = "Пока нет сохранённых идей";
+        savedIdeasElement.appendChild(empty);
         return;
     }
+
+    // 4. Рендер сохранённых идей
     savedIdeas.forEach((idea, index) => {
         const ideaItem = document.createElement("div");
         ideaItem.classList.add("saved-idea");
