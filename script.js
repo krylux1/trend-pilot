@@ -336,6 +336,29 @@ function renderIdea(idea) {
 // === Сохранённые ===
 function renderSavedIdeas() {
     savedIdeasElement.innerHTML = "";
+
+    // Если юзер не вошёл — показываем кнопку входа
+    const auth = window.FirebaseAPI?.auth;
+    if (!auth || !auth.currentUser) {
+        savedIdeasElement.innerHTML = `
+            <p style="color:#888; margin-bottom:12px;">Войди, чтобы сохранять идеи.</p>
+            <button class="auth-btn" id="loginBtnInline">Войти через Google</button>
+        `;
+        const btn = document.getElementById("loginBtnInline");
+        if (btn) {
+            btn.addEventListener("click", async () => {
+                const { GoogleAuthProvider, signInWithPopup } = window.FirebaseAPI;
+                try {
+                    await signInWithPopup(auth, new GoogleAuthProvider());
+                } catch (e) {
+                    console.error("Ошибка входа:", e.message);
+                }
+            });
+        }
+        return;
+    }
+
+    // Дальше — старый код (юзер вошёл)
     if (savedIdeas.length === 0) {
         savedIdeasElement.textContent = "Пока нет сохранённых идей";
         return;
@@ -426,6 +449,51 @@ saveButton.addEventListener("click", () => {
     }
     savedIdeas.push(currentIdea);
     localStorage.setItem(SAVED_IDEAS_KEY, JSON.stringify(savedIdeas));
+    // === Firebase Auth ===
+function initAuth() {
+    if (!window.FirebaseAPI) {
+        console.warn("Firebase API не готов");
+        return;
+    }
+    const { auth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } = window.FirebaseAPI;
+
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const userInfo = document.getElementById("userInfo");
+    const userName = document.getElementById("userName");
+
+    loginBtn.addEventListener("click", async () => {
+        try {
+            const provider = new GoogleAuthProvider();
+            const result = await signInWithPopup(auth, provider);
+            console.log("Вошёл:", result.user.displayName);
+        } catch (error) {
+            console.error("Ошибка входа:", error.message);
+        }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+        try {
+            await signOut(auth);
+            console.log("Вышел");
+        } catch (error) {
+            console.error("Ошибка выхода:", error.message);
+        }
+    });
+
+    onAuthStateChanged(auth, (user) => {
+    if (user) {
+        console.log("Пользователь:", user.uid);
+    } else {
+        console.log("Не авторизован");
+    }
+    renderSavedIdeas(); // ← перерисовать блок
+});
+}
+
+window.addEventListener("load", () => {
+    setTimeout(initAuth, 500);
+});
     renderSavedIdeas();
 });
 
