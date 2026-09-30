@@ -455,40 +455,13 @@ function initAuth() {
         console.warn("Firebase API не готов");
         return;
     }
-    const { auth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } = window.FirebaseAPI;
+    const { auth, onAuthStateChanged } = window.FirebaseAPI;
 
-    const loginBtn = document.getElementById("loginBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const userInfo = document.getElementById("userInfo");
-    const userName = document.getElementById("userName");
-
-    loginBtn.addEventListener("click", async () => {
-        try {
-            const provider = new GoogleAuthProvider();
-            const result = await signInWithPopup(auth, provider);
-            console.log("Вошёл:", result.user.displayName);
-        } catch (error) {
-            console.error("Ошибка входа:", error.message);
+        } else {
+            console.log("Не авторизован");
         }
+        renderSavedIdeas();
     });
-
-    logoutBtn.addEventListener("click", async () => {
-        try {
-            await signOut(auth);
-            console.log("Вышел");
-        } catch (error) {
-            console.error("Ошибка выхода:", error.message);
-        }
-    });
-
-    onAuthStateChanged(auth, (user) => {
-    if (user) {
-        console.log("Пользователь:", user.uid);
-    } else {
-        console.log("Не авторизован");
-    }
-    renderSavedIdeas(); // ← перерисовать блок
-});
 }
 
 window.addEventListener("load", () => {
@@ -497,4 +470,4 @@ window.addEventListener("load", () => {
     renderSavedIdeas();
 });
 
-renderSavedIdeas();
+
