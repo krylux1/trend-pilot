@@ -348,3 +348,32 @@ body {
     cursor: pointer;
 }
 .logout-btn:hover { border-color: #fff; }
+
+.user-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #222;
+}
+
+.user-name {
+    color: #bbb;
+    font-size: 14px;
+}
+
+.logout-btn {
+    padding: 6px 12px;
+    border: 1px solid #555;
+    border-radius: 6px;
+    background: transparent;
+    color: #fff;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.logout-btn:hover {
+    border-color: #fff;
+}

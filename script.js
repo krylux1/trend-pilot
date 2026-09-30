@@ -361,6 +361,28 @@ function renderSavedIdeas() {
     // Дальше — старый код (юзер вошёл)
     if (savedIdeas.length === 0) {
         savedIdeasElement.textContent = "Пока нет сохранённых идей";
+
+            // Юзер вошёл — показываем имя и кнопку "Выйти"
+    const user = auth.currentUser;
+    const header = document.createElement("div");
+    header.classList.add("user-header");
+    header.innerHTML = `
+        <span class="user-name">${user.displayName || user.email}</span>
+        <button class="logout-btn" id="logoutInline">Выйти</button>
+    `;
+    savedIdeasElement.appendChild(header);
+
+    const logoutBtn = document.getElementById("logoutInline");
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", async () => {
+            const { signOut } = window.FirebaseAPI;
+            try {
+                await signOut(auth);
+            } catch (e) {
+                console.error("Ошибка выхода:", e.message);
+            }
+        });
+    }
         return;
     }
     savedIdeas.forEach((idea, index) => {
