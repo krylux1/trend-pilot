@@ -449,6 +449,9 @@ saveButton.addEventListener("click", () => {
     }
     savedIdeas.push(currentIdea);
     localStorage.setItem(SAVED_IDEAS_KEY, JSON.stringify(savedIdeas));
+    renderSavedIdeas();
+});
+
     // === Firebase Auth ===
 function initAuth() {
     if (!window.FirebaseAPI) {
@@ -457,6 +460,9 @@ function initAuth() {
     }
     const { auth, onAuthStateChanged } = window.FirebaseAPI;
 
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            console.log("Пользователь:", user.uid);
         } else {
             console.log("Не авторизован");
         }
@@ -467,7 +473,7 @@ function initAuth() {
 window.addEventListener("load", () => {
     setTimeout(initAuth, 500);
 });
-    renderSavedIdeas();
-});
+
+
 
 
