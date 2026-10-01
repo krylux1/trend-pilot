@@ -432,6 +432,9 @@ function renderSavedIdeas() {
             savedIdeas.splice(index, 1);
             localStorage.setItem(SAVED_IDEAS_KEY, JSON.stringify(savedIdeas));
             renderSavedIdeas();
+            if (window.FirebaseAPI?.auth?.currentUser) {
+                saveUserData();
+            }
         });
 
         topRow.appendChild(ideaText);
@@ -459,6 +462,9 @@ button.addEventListener("click", () => {
     ideasCount++;
     localStorage.setItem(COUNT_KEY, ideasCount);
     localStorage.setItem(IDEA_KEY, JSON.stringify(currentIdea));
+    if (window.FirebaseAPI?.auth?.currentUser) {
+    saveUserData();
+}
     if (window.goatcounter && window.goatcounter.count) {
         window.goatcounter.count({ path: "generate_idea_" + currentType, event: true });
         if (isB2B) {
@@ -481,6 +487,9 @@ saveButton.addEventListener("click", () => {
     savedIdeas.push(currentIdea);
     localStorage.setItem(SAVED_IDEAS_KEY, JSON.stringify(savedIdeas));
     renderSavedIdeas();
+    if (window.FirebaseAPI?.auth?.currentUser) {
+    saveUserData();
+}
 });
 
     // === Firebase Auth ===
@@ -491,9 +500,10 @@ function initAuth() {
     }
     const { auth, onAuthStateChanged } = window.FirebaseAPI;
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
         if (user) {
             console.log("Пользователь:", user.uid);
+            await loadUserData(user.uid);
         } else {
             console.log("Не авторизован");
         }
@@ -504,6 +514,61 @@ function initAuth() {
 window.addEventListener("load", () => {
     setTimeout(initAuth, 500);
 });
+
+// === Firestore: загрузка данных юзера ===
+async function loadUserData(uid) {
+    const { db, doc, getDoc } = window.FirebaseAPI;
+    try {
+        const userRef = doc(db, "users", uid);
+        const snap = await getDoc(userRef);
+
+        if (snap.exists()) {
+            const data = snap.data();
+            savedIdeas = data.savedIdeas || [];
+            ideasCount = data.ideasCount || 0;
+
+            const today = new Date().toISOString().split("T")[0];
+            if (data.lastResetDate !== today) {
+                ideasCount = 0;
+                await updateDoc(userRef, { ideasCount: 0, lastResetDate: today });
+            }
+
+            localStorage.setItem(SAVED_IDEAS_KEY, JSON.stringify(savedIdeas));
+            console.log("Данные загружены из Firestore");
+        } else {
+            // Новый юзер
+            const today = new Date().toISOString().split("T")[0];
+            await setDoc(userRef, {
+                savedIdeas: [],
+                ideasCount: 0,
+                lastResetDate: today
+            });
+            savedIdeas = [];
+            ideasCount = 0;
+            console.log("Создан новый профиль в Firestore");
+        }
+        renderSavedIdeas();
+    } catch (e) {
+        console.error("Ошибка загрузки Firestore:", e.message);
+    }
+}
+
+// === Firestore: сохранение данных ===
+async function saveUserData() {
+    const { auth, db, doc, setDoc } = window.FirebaseAPI;
+    const user = auth?.currentUser;
+    if (!user) return;
+    try {
+        await setDoc(doc(db, "users", user.uid), {
+            savedIdeas: savedIdeas,
+            ideasCount: ideasCount,
+            lastResetDate: new Date().toISOString().split("T")[0]
+        }, { merge: true });
+        console.log("Сохранено в Firestore");
+    } catch (e) {
+        console.error("Ошибка сохранения Firestore:", e.message);
+    }
+}
 
 
 
