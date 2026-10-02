@@ -233,15 +233,33 @@ let currentIdea = null;
 let currentType = localStorage.getItem(TYPE_KEY) || null;
 
 // === B2B-режим ===
+// === B2B-режим с автоистечением 7 дней ===
 const urlParams = new URLSearchParams(window.location.search);
 const b2bParam = urlParams.get('b2b');
+const B2B_DAYS = 7;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
 if (b2bParam && b2bParam.startsWith('pilot-')) {
     localStorage.setItem('trendPilotB2B', b2bParam);
+    localStorage.setItem('trendPilotB2BDate', Date.now().toString());
     if (window.goatcounter && window.goatcounter.count) {
         window.goatcounter.count({ path: 'b2b_visit_' + b2bParam, event: true });
     }
 }
-const b2bCode = localStorage.getItem('trendPilotB2B');
+
+let b2bCode = localStorage.getItem('trendPilotB2B');
+const b2bSavedDate = Number(localStorage.getItem('trendPilotB2BDate')) || 0;
+
+// Автосброс через 7 дней
+if (b2bCode && (Date.now() - b2bSavedDate) > B2B_DAYS * DAY_MS) {
+    localStorage.removeItem('trendPilotB2B');
+    localStorage.removeItem('trendPilotB2BDate');
+    b2bCode = null;
+    if (window.goatcounter && window.goatcounter.count) {
+        window.goatcounter.count({ path: 'b2b_expired', event: true });
+    }
+}
+
 const isB2B = Boolean(b2bCode);
 
 // === Сброс счётчика по дате ===
