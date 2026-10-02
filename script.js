@@ -462,6 +462,7 @@ button.addEventListener("click", () => {
     ideasCount++;
     localStorage.setItem(COUNT_KEY, ideasCount);
     localStorage.setItem(IDEA_KEY, JSON.stringify(currentIdea));
+        // Сохраняем счётчик в Firestore (если вошёл)
     if (window.FirebaseAPI?.auth?.currentUser) {
     saveUserData();
 }
@@ -547,7 +548,17 @@ async function loadUserData(uid) {
             ideasCount = 0;
             console.log("Создан новый профиль в Firestore");
         }
-        renderSavedIdeas();
+    renderSavedIdeas();
+
+    // Обновляем отображение лимита
+    if (ideasCount >= 3 && !isB2B) {
+    ideaElement.textContent = "Ты использовал все идеи на сегодня. Возвращайся завтра!";
+    } else {
+    // Сбрасываем сообщение, если лимит не достигнут
+    if (ideaElement.textContent.includes("Ты использовал")) {
+        ideaElement.textContent = "Нажми кнопку, чтобы получить идею";
+    }
+}
     } catch (e) {
         console.error("Ошибка загрузки Firestore:", e.message);
     }
