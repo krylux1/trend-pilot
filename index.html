@@ -33,6 +33,20 @@
         </div>
     </div>
 
+    <!-- Экран выбора жанра -->
+<div class="genre-screen" id="genreScreen" style="display:none;">
+    <h1 class="title">Выбери нишу</h1>
+    <p class="subtitle">Под что нужны идеи?</p>
+    <div class="genre-buttons">
+        <button class="genre-btn" data-genre="game">🎮 Игровая</button>
+        <button class="genre-btn" data-genre="life">🌱 Жизненная</button>
+        <button class="genre-btn" data-genre="business">💼 Бизнес</button>
+        <button class="genre-btn" data-genre="fitness">💪 Фитнес</button>
+        <button class="genre-btn" data-genre="education">📚 Образование</button>
+        <button class="genre-btn" data-genre="all">🌍 Все</button>
+    </div>
+</div>
+
     <!-- Основной контент -->
     <main class="container" id="mainContent" style="display:none;">
         <h1 class="title">Trend Pilot</h1>
@@ -57,10 +71,12 @@
             </button>
         </div>
 
-         
-
         <button class="change-type" id="changeTypeButton">
-            Сменить тип
+            Сменить формат
+        </button>
+
+        <button class="change-type" id="changeGenreButton">
+            Сменить нишу
         </button>
 
         <section class="saved-section">
