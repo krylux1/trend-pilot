@@ -564,3 +564,41 @@ body {
     font-weight: 600;
     font-style: italic;
 }
+
+.state-block {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.state-icon {
+    font-size: 42px;
+    margin-bottom: 16px;
+}
+
+.state-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.state-subtitle {
+    font-size: 14px;
+    color: #888;
+}
+
+.state-cta {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.state-cta:hover {
+    background: #ddd;
+}

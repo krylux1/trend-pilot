@@ -286,7 +286,9 @@ if (!currentType) {
     showMainContent();
     updateSettingsBar();
     if (ideasCount >= 3 && !isB2B) {
-        ideaElement.textContent = "Ты использовал все идеи на сегодня. Возвращайся завтра!";
+        renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра — будет ещё 3");
+    } else if (!currentIdea) {
+        renderState("🎯", "Здесь появится идея", "Нажми «Получить идею»");
     }
 }
 
@@ -509,14 +511,15 @@ function renderSavedIdeas() {
 // === Получить идею ===
 button.addEventListener("click", () => {
     if (ideasCount >= 3 && !isB2B) {
-        ideaElement.textContent = "Ты использовал все идеи на сегодня. Возвращайся завтра!";
-        return;
-    }
+    renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра ");
+    return;
+}
     const filtered = getFilteredIdeas();
     if (filtered.length === 0) {
-        ideaElement.textContent = "Для этого типа пока нет идей";
-        return;
+    renderState("🔍", "Для этой ниши пока нет идей", "Попробуй другую нишу или формат");
+    return;
     }
+
     const randomIndex = Math.floor(Math.random() * filtered.length);
     currentIdea = filtered[randomIndex];
     renderIdea(currentIdea);
@@ -538,14 +541,14 @@ button.addEventListener("click", () => {
 // === Сохранить ===
 saveButton.addEventListener("click", () => {
     if (!currentIdea) {
-        ideaElement.textContent = "Сначала получи идею";
-        return;
-    }
+    renderState("👆", "Сначала получи идею", "Нажми «Получить идею»");
+    return;
+}
     const exists = savedIdeas.some(i => (typeof i === "string" ? i : i.text) === currentIdea.text);
     if (exists) {
-        ideaElement.textContent = "Эта идея уже сохранена";
-        return;
-    }
+    renderState("✅", "Уже сохранено", "Эта идея есть в списке ниже");
+    return;
+}
     savedIdeas.push(currentIdea);
     localStorage.setItem(SAVED_IDEAS_KEY, JSON.stringify(savedIdeas));
     renderSavedIdeas();
@@ -612,14 +615,13 @@ async function loadUserData(uid) {
     renderSavedIdeas();
 
     // Обновляем отображение лимита
+    // Обновляем отображение лимита
     if (ideasCount >= 3 && !isB2B) {
-    ideaElement.textContent = "Ты использовал все идеи на сегодня. Возвращайся завтра!";
-    } else {
-    // Сбрасываем сообщение, если лимит не достигнут
-    if (ideaElement.textContent.includes("Ты использовал")) {
-        ideaElement.textContent = "Нажми кнопку, чтобы получить идею";
+        renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра — будет ещё 3");
+    } else if (!currentIdea) {
+        renderState("🎯", "Здесь появится идея", "Нажми «Получить идею»");
     }
-}
+
     } catch (e) {
         console.error("Ошибка загрузки Firestore:", e.message);
     }
@@ -642,6 +644,19 @@ async function saveUserData() {
     }
 }
 
+function renderState(icon, title, subtitle, ctaText, ctaAction) {
+    ideaElement.innerHTML = `
+        <div class="state-block">
+            <div class="state-icon">${icon}</div>
+            <div class="state-title">${title}</div>
+            <div class="state-subtitle">${subtitle}</div>
+            ${ctaText ? `<button class="state-cta" id="stateCta">${ctaText}</button>` : ""}
+        </div>
+    `;
+    if (ctaText && ctaAction) {
+        document.getElementById("stateCta").addEventListener("click", ctaAction);
+    }
+}
 
 
 
