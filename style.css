@@ -74,7 +74,7 @@ body {
         display: flex;
         justify-content: center;
         gap: 12px;
-        margin-bottom: 50px;
+        margin-bottom: 24px;
     }
 
     .saved-tittle {
@@ -453,4 +453,114 @@ body {
 .genre-btn:hover {
     background: #fff;
     color: #000;
+}
+
+/* Иерархия кнопок */
+.button--primary {
+    background: #fff;
+    color: #000;
+    font-weight: 700;
+    padding: 16px 32px;
+    font-size: 16px;
+}
+
+.button--secondary {
+    background: transparent;
+    color: #aaa;
+    border: 1px solid #333;
+    font-size: 14px;
+    padding: 12px 20px;
+}
+
+.button--secondary:hover {
+    background: #111;
+    color: #fff;
+    border-color: #555;
+}
+
+/* Строка настроек */
+.settings-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 50px;
+    color: #666;
+    font-size: 13px;
+}
+
+.settings-btn {
+    background: #111;
+    border: 1px solid #333;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.settings-btn:hover {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+}
+
+/* Карточка идеи */
+.idea-header {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.idea-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border: 1px solid #333;
+    border-radius: 20px;
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.idea-text {
+    font-size: 24px;
+    line-height: 1.3;
+    margin: 0;
+    text-align: left;
+}
+
+.idea-body {
+    text-align: left;
+}
+
+.idea-row {
+    padding: 14px 0;
+    border-top: 1px solid #1a1a1a;
+}
+
+.idea-label {
+    display: block;
+    font-size: 11px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.idea-row p {
+    font-size: 15px;
+    color: #bbb;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.idea-row--hook p {
+    color: #fff;
+    font-weight: 600;
+    font-style: italic;
 }

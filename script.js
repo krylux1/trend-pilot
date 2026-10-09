@@ -284,6 +284,7 @@ if (!currentType) {
     showGenreScreen();
 } else {
     showMainContent();
+    updateSettingsBar();
     if (ideasCount >= 3 && !isB2B) {
         ideaElement.textContent = "Ты использовал все идеи на сегодня. Возвращайся завтра!";
     }
@@ -295,6 +296,7 @@ typeButtons.forEach(btn => {
         currentType = btn.dataset.type;
         localStorage.setItem(TYPE_KEY, currentType);
         showMainContent();
+        updateSettingsBar();
     });
 });
 
@@ -304,18 +306,29 @@ genreButtons.forEach(btn => {
         localStorage.setItem(GENRE_KEY, currentGenre);
         hideGenreScreen();
         showMainContent();
+        updateSettingsBar();
         if (currentIdea) {
             renderIdea(currentIdea);
         }
     });
 });
 
-// Кнопка "Сменить нишу"
-document.getElementById("changeGenreButton").addEventListener("click", () => {
-    showGenreScreen();
-});
+function updateSettingsBar() {
+    const typeNames = { video: "Видео", post: "Пост", story: "Сторис", audio: "Аудио" };
+    const genreNames = { all: "Все", life: "Жизненная", game: "Игровая", business: "Бизнес", fitness: "Фитнес", education: "Образование" };
+    const el = document.getElementById("currentSettings");
+    if (el) {
+        el.textContent = (typeNames[currentType] || "—") + " · " + (genreNames[currentGenre] || "Все");
+    }
+}
+
 
 changeTypeButton.addEventListener("click", showTypeScreen);
+
+const changeGenreButton = document.getElementById("changeGenreButton");
+if (changeGenreButton) {
+    changeGenreButton.addEventListener("click", showGenreScreen);
+}
 
 function getFilteredIdeas() {
     let filtered = ideas.filter(i => i.type === currentType);
@@ -327,34 +340,54 @@ function getFilteredIdeas() {
 
 // === Отрисовка идеи с полями why/how/hook ===
 function renderIdea(idea) {
+    const typeLabels = { video: "ВИДЕО", post: "ПОСТ", story: "СТОРИС", audio: "АУДИО" };
+    const genreLabels = { all: "УНИВЕРСАЛ", life: "ЖИЗНЬ", game: "ИГРЫ", business: "БИЗНЕС", fitness: "ФИТНЕС", education: "ОБУЧЕНИЕ" };
+
+    const typeLabel = typeLabels[idea.type] || idea.type.toUpperCase();
+    const genreLabel = genreLabels[idea.genre] || "";
+
     ideaElement.innerHTML = `
         <div class="idea-block">
-            <h2 class="idea-text">${idea.text}</h2>
-            <p class="idea-why"><strong>Почему сработает:</strong> ${idea.why}</p>
-            <p class="idea-how"><strong>Как снять:</strong> ${idea.how}</p>
-            <p class="idea-hook"><strong>Хук:</strong> ${idea.hook}</p>
+            <div class="idea-header">
+                <span class="idea-tag">${typeLabel}${genreLabel ? " · " + genreLabel : ""}</span>
+                <h2 class="idea-text">${idea.text}</h2>
+            </div>
+
+            <div class="idea-body">
+                <div class="idea-row">
+                    <span class="idea-label">Почему сработает</span>
+                    <p>${idea.why}</p>
+                </div>
+                <div class="idea-row">
+                    <span class="idea-label">Как снять</span>
+                    <p>${idea.how}</p>
+                </div>
+                <div class="idea-row idea-row--hook">
+                    <span class="idea-label">Хук</span>
+                    <p>«${idea.hook}»</p>
+                </div>
+            </div>
+
             <div class="feedback">
                 <button class="fb-btn" data-fb="up">👍</button>
                 <button class="fb-btn" data-fb="down">👎</button>
             </div>
         </div>
     `;
+
     ideaElement.querySelectorAll(".fb-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             const feedback = JSON.parse(localStorage.getItem(FEEDBACK_KEY)) || [];
             feedback.push({ text: idea.text, vote: btn.dataset.fb, date: today });
             localStorage.setItem(FEEDBACK_KEY, JSON.stringify(feedback));
-
-            // Аналитика: тип + голос + первые 40 символов идеи
-              if (window.goatcounter && window.goatcounter.count) {
-              const ideaIndex = ideas.findIndex(i => i.text === idea.text);
-              window.goatcounter.count({
-              path: 'fb_' + btn.dataset.fb + '_' + idea.type + '_' + ideaIndex,
-              title: idea.text,
-               event: true
-            });
-        }
-
+            if (window.goatcounter && window.goatcounter.count) {
+                const ideaIndex = ideas.findIndex(i => i.text === idea.text);
+                window.goatcounter.count({
+                    path: 'fb_' + btn.dataset.fb + '_' + idea.type + '_' + ideaIndex,
+                    title: idea.text,
+                    event: true
+                });
+            }
             btn.textContent = btn.dataset.fb === "up" ? "👍 Спасибо!" : "👎 Понял";
             btn.disabled = true;
         });

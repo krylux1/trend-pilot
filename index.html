@@ -59,25 +59,41 @@
         </div>
 
         <div class="buttons">
-            <button class="button"
+            <button class="button button--primary"
                 id="ideaButton"
                 data-goatcounter-click="generate_idea">
                 Получить идею
             </button>
-            <button class="button"
+            <button class="button button--secondary"
                 id="saveButton"
                 data-goatcounter-click="save_idea">
-                Сохранить идею
+                Сохранить
             </button>
+        </div>  
+
+        <div class="settings-bar">
+            <button class="settings-btn" id="changeTypeButton">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+    </svg>
+    Формат
+</button>
+
+<button class="settings-btn" id="changeGenreButton">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="8" y1="6" x2="21" y2="6"></line>
+        <line x1="8" y1="12" x2="21" y2="12"></line>
+        <line x1="8" y1="18" x2="21" y2="18"></line>
+        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+    </svg>
+    Ниша
+</button>
         </div>
-
-        <button class="change-type" id="changeTypeButton">
-            Сменить формат
-        </button>
-
-        <button class="change-type" id="changeGenreButton">
-            Сменить нишу
-        </button>
 
         <section class="saved-section">
             <h2 class="saved-title">Сохранённые идеи</h2>
