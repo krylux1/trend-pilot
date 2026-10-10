@@ -511,25 +511,40 @@ function renderSavedIdeas() {
 // === Получить идею ===
 button.addEventListener("click", () => {
     if (ideasCount >= 3 && !isB2B) {
-    renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра ");
-    return;
-}
-    const filtered = getFilteredIdeas();
+        renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра");
+        return;
+    }
+
+    let filtered = getFilteredIdeas();
+
+    // Исключаем последние 5 показанных идей
+    const HISTORY_KEY = "trendPilotHistory";
+    const history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+    if (filtered.length > history.length + 1) {
+        filtered = filtered.filter(i => !history.includes(i.text));
+    }
+
     if (filtered.length === 0) {
-    renderState("🔍", "Для этой ниши пока нет идей", "Попробуй другую нишу или формат");
-    return;
+        renderState("🔍", "Для этой ниши пока нет идей", "Попробуй другую нишу или формат");
+        return;
     }
 
     const randomIndex = Math.floor(Math.random() * filtered.length);
     currentIdea = filtered[randomIndex];
     renderIdea(currentIdea);
+
+    // Сохраняем в историю
+    history.push(currentIdea.text);
+    if (history.length > 5) history.shift();
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+
     ideasCount++;
     localStorage.setItem(COUNT_KEY, ideasCount);
     localStorage.setItem(IDEA_KEY, JSON.stringify(currentIdea));
-        // Сохраняем счётчик в Firestore (если вошёл)
+
     if (window.FirebaseAPI?.auth?.currentUser) {
-    saveUserData();
-}
+        saveUserData();
+    }
     if (window.goatcounter && window.goatcounter.count) {
         window.goatcounter.count({ path: "generate_idea_" + currentType, event: true });
         if (isB2B) {
@@ -617,7 +632,7 @@ async function loadUserData(uid) {
     // Обновляем отображение лимита
     // Обновляем отображение лимита
     if (ideasCount >= 3 && !isB2B) {
-        renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра — будет ещё 3");
+        renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра — будут ещё ");
     } else if (!currentIdea) {
         renderState("🎯", "Здесь появится идея", "Нажми «Получить идею»");
     }
