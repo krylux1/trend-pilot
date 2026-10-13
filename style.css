@@ -602,3 +602,12 @@ body {
 .state-cta:hover {
     background: #ddd;
 }
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.3); }
+    50% { box-shadow: 0 0 0 12px rgba(255,255,255,0); }
+}
+
+.button--primary.pulse {
+    animation: pulse 2s infinite;
+}

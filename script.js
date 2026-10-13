@@ -289,6 +289,8 @@ if (!currentType) {
         renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра — будет ещё 3");
     } else if (!currentIdea) {
         renderState("🎯", "Здесь появится идея", "Нажми «Получить идею»");
+        const btn = document.getElementById("ideaButton");
+        if (btn) btn.classList.add("pulse");
     }
 }
 
@@ -533,6 +535,10 @@ button.addEventListener("click", () => {
     currentIdea = filtered[randomIndex];
     renderIdea(currentIdea);
 
+        // Убираем пульс
+    const ideaBtn = document.getElementById("ideaButton");
+    if (ideaBtn) ideaBtn.classList.remove("pulse");
+
     // Сохраняем в историю
     history.push(currentIdea.text);
     if (history.length > 5) history.shift();
@@ -634,8 +640,10 @@ async function loadUserData(uid) {
     if (ideasCount >= 3 && !isB2B) {
         renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра — будут ещё ");
     } else if (!currentIdea) {
-        renderState("🎯", "Здесь появится идея", "Нажми «Получить идею»");
-    }
+    renderState("🎯", "Здесь появится идея", "Нажми «Получить идею»");
+    const btn = document.getElementById("ideaButton");
+    if (btn) btn.classList.add("pulse");
+}
 
     } catch (e) {
         console.error("Ошибка загрузки Firestore:", e.message);
