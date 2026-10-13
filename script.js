@@ -311,8 +311,10 @@ genreButtons.forEach(btn => {
         hideGenreScreen();
         showMainContent();
         updateSettingsBar();
-        if (currentIdea) {
-            renderIdea(currentIdea);
+                if (!currentIdea) {
+            renderState("🎯", "Здесь появится идея", "Нажми «Получить идею»");
+            const btn = document.getElementById("ideaButton");
+            if (btn) btn.classList.add("pulse");
         }
     });
 });
