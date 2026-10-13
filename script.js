@@ -568,11 +568,17 @@ if (changeGenreButton) {
 }
 
 function getFilteredIdeas() {
-    let filtered = ideas.filter(i => i.type === currentType);
-    if (currentGenre && currentGenre !== "all") {
-        filtered = filtered.filter(i => !i.genre || i.genre === currentGenre);
+    const byType = ideas.filter(i => i.type === currentType);
+    
+    if (!currentGenre || currentGenre === "all") {
+        return byType;
     }
-    return filtered;
+    
+    const niche = byType.filter(i => i.genre === currentGenre);
+    const universal = byType.filter(i => i.genre === "all");
+    
+    // 70% ниша + 30% универсал
+    return [...niche, ...niche, ...niche, ...universal];
 }
 
 // === Отрисовка идеи с полями why/how/hook ===
