@@ -301,6 +301,11 @@ typeButtons.forEach(btn => {
         localStorage.setItem(TYPE_KEY, currentType);
         showMainContent();
         updateSettingsBar();
+        if (!currentIdea) {
+            renderState("🎯", "Здесь появится идея", "Нажми «Получить идею»");
+            const b = document.getElementById("ideaButton");
+            if (b) b.classList.add("pulse");
+        }
     });
 });
 
@@ -311,10 +316,12 @@ genreButtons.forEach(btn => {
         hideGenreScreen();
         showMainContent();
         updateSettingsBar();
-                if (!currentIdea) {
+        if (currentIdea) {
+            renderIdea(currentIdea);
+        } else {
             renderState("🎯", "Здесь появится идея", "Нажми «Получить идею»");
-            const btn = document.getElementById("ideaButton");
-            if (btn) btn.classList.add("pulse");
+            const b = document.getElementById("ideaButton");
+            if (b) b.classList.add("pulse");
         }
     });
 });
