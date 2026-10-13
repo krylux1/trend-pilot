@@ -194,7 +194,6 @@ const mainContent = document.getElementById("mainContent");
 const typeButtons = document.querySelectorAll(".type-btn");
 const genreScreen = document.getElementById("genreScreen");
 const genreButtons = document.querySelectorAll(".genre-btn");
-const profileScreen = document.getElementById("profileScreen");
 
 const SAVED_IDEAS_KEY = "trendPilotSavedIdeas";
 const COUNT_KEY = "trendPilotCount";
@@ -596,12 +595,10 @@ function initAuth() {
     }
     const { auth, onAuthStateChanged } = window.FirebaseAPI;
 
-    onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(auth, async (user) => {
         if (user) {
             console.log("Пользователь:", user.uid);
             await loadUserData(user.uid);
-            const hasProfile = await checkAndShowProfile(user);
-            if (!hasProfile) return;
         } else {
             console.log("Не авторизован");
         }
@@ -693,69 +690,3 @@ function renderState(icon, title, subtitle, ctaText, ctaAction) {
     }
 }
 
-// === L2: Профиль юзера ===
-async function checkAndShowProfile(user) {
-    if (!user) return false;
-    const { db, doc, getDoc } = window.FirebaseAPI;
-    try {
-        const userRef = doc(db, "users", user.uid);
-        const snap = await getDoc(userRef);
-        if (snap.exists() && snap.data().profile && snap.data().profile.niche) {
-            console.log("Профиль есть:", snap.data().profile);
-            return true;
-        } else {
-            showProfileScreen();
-            return false;
-        }
-    } catch (e) {
-        console.error("Ошибка проверки профиля:", e.message);
-        return false;
-    }
-}
-
-function showProfileScreen() {
-    profileScreen.style.display = "flex";
-    mainContent.style.display = "none";
-    typeScreen.style.display = "none";
-    genreScreen.style.display = "none";
-}
-
-async function saveProfile() {
-    const { auth, db, doc, setDoc } = window.FirebaseAPI;
-    const user = auth?.currentUser;
-    if (!user) return;
-
-    const profile = {
-        niche: document.getElementById("profileNiche").value.trim(),
-        platform: document.getElementById("profilePlatform").value,
-        goal: document.getElementById("profileGoal").value
-    };
-
-    if (!profile.niche) {
-        alert("Заполни нишу");
-        return;
-    }
-
-    try {
-        await setDoc(doc(db, "users", user.uid), { profile: profile }, { merge: true });
-        console.log("Профиль сохранён:", profile);
-        profileScreen.style.display = "none";
-
-        // Продолжаем обычную логику показа экранов
-        if (!currentType) {
-            showTypeScreen();
-        } else if (!currentGenre) {
-            showGenreScreen();
-        } else {
-            showMainContent();
-            updateSettingsBar();
-        }
-    } catch (e) {
-        console.error("Ошибка сохранения профиля:", e.message);
-    }
-}
-
-const profileSaveBtn = document.getElementById("profileSaveBtn");
-if (profileSaveBtn) {
-    profileSaveBtn.addEventListener("click", saveProfile);
-}
