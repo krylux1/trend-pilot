@@ -509,7 +509,7 @@ if (!currentType) {
 } else {
     showMainContent();
     updateSettingsBar();
-    if (ideasCount >= 3 && !isB2B) {
+    if (ideasCount >= 3 && !isB2B && !isPro) {
         renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра — будет ещё 3");
     } else if (!currentIdea) {
         renderState("🎯", "Здесь появится идея", "Нажми «Получить идею»");
@@ -751,7 +751,7 @@ function renderSavedIdeas() {
 
 // === Получить идею ===
 button.addEventListener("click", () => {
-    if (ideasCount >= 3 && !isB2B) {
+    if (ideasCount >= 3 && !isB2B && !isPro) {
         renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра");
         return;
     }
@@ -841,6 +841,8 @@ window.addEventListener("load", () => {
 });
 
 // === Firestore: загрузка данных юзера ===
+let isPro = false; 
+
 async function loadUserData(uid) {
     const { db, doc, getDoc } = window.FirebaseAPI;
     try {
@@ -851,6 +853,9 @@ async function loadUserData(uid) {
             const data = snap.data();
             savedIdeas = data.savedIdeas || [];
             ideasCount = data.ideasCount || 0;
+            isPro = data.isPro === true; // ← читаем статус Pro
+            console.log("isPro:", isPro);
+            // ...
 
             const today = new Date().toISOString().split("T")[0];
             if (data.lastResetDate !== today) {
@@ -876,7 +881,7 @@ async function loadUserData(uid) {
 
     // Обновляем отображение лимита
     // Обновляем отображение лимита
-    if (ideasCount >= 3 && !isB2B) {
+    if (ideasCount >= 3 && !isB2B && !isPro) {
         renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра — будут ещё ");
     } else if (!currentIdea) {
     renderState("🎯", "Здесь появится идея", "Нажми «Получить идею»");
@@ -898,7 +903,8 @@ async function saveUserData() {
         await setDoc(doc(db, "users", user.uid), {
             savedIdeas: savedIdeas,
             ideasCount: ideasCount,
-            lastResetDate: new Date().toISOString().split("T")[0]
+            lastResetDate: new Date().toISOString().split("T")[0],
+            isPro: isPro
         }, { merge: true });
         console.log("Сохранено в Firestore");
     } catch (e) {

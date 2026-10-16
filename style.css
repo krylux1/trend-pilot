@@ -612,3 +612,28 @@ body {
     animation: pulse 2s infinite;
 }
 
+.subscription-section {
+    margin-top: 50px;
+    padding: 30px 25px;
+    text-align: center;
+    border: 1px solid #333;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #0a0a0a 0%, #111 100%);
+}
+
+.subscription-title {
+    font-size: 24px;
+    margin-bottom: 12px;
+    color: #fff;
+}
+
+.subscription-text {
+    color: #aaa;
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.subscription-text strong {
+    color: #fff;
+}
