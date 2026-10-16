@@ -923,9 +923,11 @@ function renderState(icon, title, subtitle, ctaText, ctaAction) {
             ${ctaText ? `<button class="state-cta" id="stateCta">${ctaText}</button>` : ""}
         </div>
     `;
+
     if (ctaText && ctaAction) {
         document.getElementById("stateCta").addEventListener("click", ctaAction);
     }
+}
 
     // === Оплата ===
 const payBtn = document.getElementById("payBtn");
@@ -945,5 +947,5 @@ if (payBtn) {
         window.open(url, "_blank");
     });
 }
-}
+
 
