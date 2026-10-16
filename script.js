@@ -924,5 +924,24 @@ function renderState(icon, title, subtitle, ctaText, ctaAction) {
     if (ctaText && ctaAction) {
         document.getElementById("stateCta").addEventListener("click", ctaAction);
     }
+    
+    // === Оплата ===
+const payBtn = document.getElementById("payBtn");
+if (payBtn) {
+    payBtn.addEventListener("click", () => {
+        const auth = window.FirebaseAPI?.auth;
+        const user = auth?.currentUser;
+
+        if (!user) {
+            alert("Войди через Google, чтобы оплатить");
+            return;
+        }
+
+        const url = "https://self.payanyway.ru/instainvoice/17921020201750505"
+            + "?MNT_CUSTOM1=" + encodeURIComponent(user.uid);
+
+        window.open(url, "_blank");
+    });
+}
 }
 
