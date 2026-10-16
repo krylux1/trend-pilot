@@ -844,7 +844,7 @@ window.addEventListener("load", () => {
 let isPro = false; 
 
 async function loadUserData(uid) {
-    const { db, doc, getDoc, updateDoc } = window.FirebaseAPI;
+    const { db, doc, getDoc, updateDoc, setDoc, auth } = window.FirebaseAPI;
     try {
         const userRef = doc(db, "users", uid);
         const snap = await getDoc(userRef);
@@ -868,10 +868,13 @@ async function loadUserData(uid) {
         } else {
             // Новый юзер
             const today = new Date().toISOString().split("T")[0];
+            const email = auth?.currentUser?.email || null;
             await setDoc(userRef, {
                 savedIdeas: [],
                 ideasCount: 0,
-                lastResetDate: today
+                lastResetDate: today,
+                email: user.email,
+                isPro: false
             });
             savedIdeas = [];
             ideasCount = 0;
@@ -904,7 +907,6 @@ async function saveUserData() {
             savedIdeas: savedIdeas,
             ideasCount: ideasCount,
             lastResetDate: new Date().toISOString().split("T")[0],
-            isPro: isPro
         }, { merge: true });
         console.log("Сохранено в Firestore");
     } catch (e) {
@@ -924,7 +926,7 @@ function renderState(icon, title, subtitle, ctaText, ctaAction) {
     if (ctaText && ctaAction) {
         document.getElementById("stateCta").addEventListener("click", ctaAction);
     }
-    
+
     // === Оплата ===
 const payBtn = document.getElementById("payBtn");
 if (payBtn) {
