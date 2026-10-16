@@ -939,7 +939,7 @@ if (payBtn) {
             return;
         }
 
-        const url = "https://self.payanyway.ru/instainvoice/17921020201750505"
+        const url = "https://self.payanyway.ru/instainvoice/17921850951750931"
             + "?MNT_CUSTOM1=" + encodeURIComponent(user.uid);
 
         window.open(url, "_blank");
