@@ -110,10 +110,30 @@ body {
 }
 
 
-.toolbar-btn--tg:hover {
+.tg-float {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 50;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     color: #29b6f6;
-    border-color: rgba(41, 182, 246, 0.4);
-    background: rgba(41, 182, 246, 0.06);
+    transition: 0.2s;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.tg-float:hover {
+    background: rgba(41, 182, 246, 0.15);
+    border-color: rgba(41, 182, 246, 0.5);
+    color: #4fc3f7;
+    transform: scale(1.05);
 }
 
 /* Экран выбора типа */
