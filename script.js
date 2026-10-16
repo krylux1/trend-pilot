@@ -844,7 +844,7 @@ window.addEventListener("load", () => {
 let isPro = false; 
 
 async function loadUserData(uid) {
-    const { db, doc, getDoc } = window.FirebaseAPI;
+    const { db, doc, getDoc, updateDoc } = window.FirebaseAPI;
     try {
         const userRef = doc(db, "users", uid);
         const snap = await getDoc(userRef);
