@@ -958,13 +958,13 @@ if (payBtn) {
             } else {
                 alert("Ошибка создания платежа: " + JSON.stringify(data.error));
                 payBtn.disabled = false;
-                payBtn.textContent = "Оплатить 490 ₽";
+                payBtn.textContent = "Оплатить 299 ₽";
             }
         } catch (e) {
             console.error(e);
             alert("Ошибка сети. Попробуй позже.");
             payBtn.disabled = false;
-            payBtn.textContent = "Оплатить 490 ₽";
+            payBtn.textContent = "Оплатить 299 ₽";
         }
     });
 }
