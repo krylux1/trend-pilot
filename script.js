@@ -929,10 +929,10 @@ function renderState(icon, title, subtitle, ctaText, ctaAction) {
     }
 }
 
-    // === Оплата ===
+    // === Оплата (ЮKassa) ===
 const payBtn = document.getElementById("payBtn");
 if (payBtn) {
-    payBtn.addEventListener("click", () => {
+    payBtn.addEventListener("click", async () => {
         const auth = window.FirebaseAPI?.auth;
         const user = auth?.currentUser;
 
@@ -941,11 +941,31 @@ if (payBtn) {
             return;
         }
 
-        const url = "https://self.payanyway.ru/instainvoice/17921850951750931"
-            + "?MNT_CUSTOM1=" + encodeURIComponent(user.uid);
+        payBtn.disabled = true;
+        payBtn.textContent = "Создаем платеж...";
 
-        window.open(url, "_blank");
+        try {
+            const response = await fetch("https://trend-pilot-63c8.unityfoster791.workers.dev/create-payment", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId: user.uid })
+            });
+
+            const data = await response.json();
+
+            if (data.confirmation_url) {
+                window.location.href = data.confirmation_url; // Перенаправляем на форму ЮKassa
+            } else {
+                alert("Ошибка создания платежа: " + JSON.stringify(data.error));
+                payBtn.disabled = false;
+                payBtn.textContent = "Оплатить 490 ₽";
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Ошибка сети. Попробуй позже.");
+            payBtn.disabled = false;
+            payBtn.textContent = "Оплатить 490 ₽";
+        }
     });
 }
-
 
