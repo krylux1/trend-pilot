@@ -862,20 +862,29 @@ const proActiveSection = document.getElementById("proActiveSection");
 
 if (proSection && proActiveSection) {
     if (isPro) {
-        // Скрываем кнопку оплаты, показываем статус "Активен"
         proSection.style.display = "none";
         proActiveSection.style.display = "block";
         
-        // Выводим дату окончания подписки, если она есть в базе
         const proUntil = data.proUntil; 
         if (proUntil) {
-            // Превращаем формат 2026-11-18T... в 18.11.2026
-            const date = new Date(proUntil);
-            const formattedDate = date.toLocaleDateString('ru-RU');
-            document.getElementById("proUntilDate").textContent = `Подписка активна до: ${formattedDate}`;
+            let date;
+            // Проверяем, в каком формате пришла дата (Firestore Timestamp или обычная строка)
+            if (typeof proUntil.toDate === 'function') {
+                date = proUntil.toDate(); 
+            } else {
+                date = new Date(proUntil); 
+            }
+
+            // Если дата валидная — выводим
+            if (!isNaN(date.getTime())) {
+                const formattedDate = date.toLocaleDateString('ru-RU');
+                document.getElementById("proUntilDate").textContent = `Подписка активна до: ${formattedDate}`;
+            } else {
+                // Если дата битая, просто скрываем эту строку
+                document.getElementById("proUntilDate").style.display = "none";
+            }
         }
     } else {
-        // Скрываем статус, показываем кнопку оплаты
         proSection.style.display = "block";
         proActiveSection.style.display = "none";
     }
