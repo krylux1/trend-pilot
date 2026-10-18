@@ -743,3 +743,13 @@ body {
     color: #fff;
     transform: translateX(3px);
 }
+
+.subscription-section--active {
+    background: radial-gradient(circle at 50% 0%, rgba(76, 175, 80, 0.15) 0%, transparent 70%), 
+                linear-gradient(135deg, #0d0d0d 0%, #0a0a0a 100%);
+    border-color: rgba(76, 175, 80, 0.3); /* Зеленоватая рамка */
+}
+
+.subscription-section--active::before {
+    background: linear-gradient(90deg, transparent 0%, rgba(76, 175, 80, 0.5) 50%, transparent 100%);
+}

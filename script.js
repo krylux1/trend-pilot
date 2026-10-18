@@ -853,9 +853,33 @@ async function loadUserData(uid) {
             const data = snap.data();
             savedIdeas = data.savedIdeas || [];
             ideasCount = data.ideasCount || 0;
-            isPro = data.isPro === true; // ← читаем статус Pro
-            console.log("isPro:", isPro);
-            // ...
+            // Внутри функции loadUserData:
+isPro = data.isPro === true;
+console.log("isPro:", isPro);
+
+const proSection = document.getElementById("proSection");
+const proActiveSection = document.getElementById("proActiveSection");
+
+if (proSection && proActiveSection) {
+    if (isPro) {
+        // Скрываем кнопку оплаты, показываем статус "Активен"
+        proSection.style.display = "none";
+        proActiveSection.style.display = "block";
+        
+        // Выводим дату окончания подписки, если она есть в базе
+        const proUntil = data.proUntil; 
+        if (proUntil) {
+            // Превращаем формат 2026-11-18T... в 18.11.2026
+            const date = new Date(proUntil);
+            const formattedDate = date.toLocaleDateString('ru-RU');
+            document.getElementById("proUntilDate").textContent = `Подписка активна до: ${formattedDate}`;
+        }
+    } else {
+        // Скрываем статус, показываем кнопку оплаты
+        proSection.style.display = "block";
+        proActiveSection.style.display = "none";
+    }
+}
 
             const today = new Date().toISOString().split("T")[0];
             if (data.lastResetDate !== today) {
