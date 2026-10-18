@@ -907,6 +907,7 @@ async function saveUserData() {
             savedIdeas: savedIdeas,
             ideasCount: ideasCount,
             lastResetDate: new Date().toISOString().split("T")[0],
+            email: user.email // <--- ВОТ ЭТА СТРОКА ДОЛЖНА БЫТЬ
         }, { merge: true });
         console.log("Сохранено в Firestore");
     } catch (e) {
