@@ -817,6 +817,8 @@ saveButton.addEventListener("click", () => {
 }
 });
 
+
+
     // === Firebase Auth ===
 function initAuth() {
     if (!window.FirebaseAPI) {
@@ -825,15 +827,16 @@ function initAuth() {
     }
     const { auth, onAuthStateChanged } = window.FirebaseAPI;
 
-        onAuthStateChanged(auth, async (user) => {
+    onAuthStateChanged(auth, async (user) => {
         if (user) {
-            console.log("Пользователь:", user.uid);
-            await loadUserData(user.uid);
-        } else {
-            console.log("Не авторизован");
-        }
-        renderSavedIdeas();
-    });
+        console.log("Пользователь:", user.uid);
+        await loadUserData(user.uid);
+    } else {
+        console.log("Не авторизован");
+        updateProUI(false); // <--- ВОТ ЭТА СТРОКА ВАЖНА
+    }
+    renderSavedIdeas();
+});
 }
 
 window.addEventListener("load", () => {
@@ -842,6 +845,22 @@ window.addEventListener("load", () => {
 
 // === Firestore: загрузка данных юзера ===
 let isPro = false; 
+
+// Функция для переключения блоков Pro
+function updateProUI(isProStatus) {
+    const proSection = document.getElementById("proSection");
+    const proActiveSection = document.getElementById("proActiveSection");
+    
+    if (!proSection || !proActiveSection) return;
+
+    if (isProStatus) {
+        proSection.style.display = "none";
+        proActiveSection.style.display = "block";
+    } else {
+        proSection.style.display = "block";
+        proActiveSection.style.display = "none";
+    }
+}
 
 async function loadUserData(uid) {
     const { db, doc, getDoc, updateDoc, setDoc, auth } = window.FirebaseAPI;
@@ -855,38 +874,23 @@ async function loadUserData(uid) {
             ideasCount = data.ideasCount || 0;
             // Внутри функции loadUserData:
 isPro = data.isPro === true;
+updateProUI(isPro);
 console.log("isPro:", isPro);
 
 const proSection = document.getElementById("proSection");
 const proActiveSection = document.getElementById("proActiveSection");
 
-if (proSection && proActiveSection) {
-    if (isPro) {
-        proSection.style.display = "none";
-        proActiveSection.style.display = "block";
-        
-        const proUntil = data.proUntil; 
-        if (proUntil) {
-            let date;
-            // Проверяем, в каком формате пришла дата (Firestore Timestamp или обычная строка)
-            if (typeof proUntil.toDate === 'function') {
-                date = proUntil.toDate(); 
-            } else {
-                date = new Date(proUntil); 
-            }
-
-            // Если дата валидная — выводим
-            if (!isNaN(date.getTime())) {
-                const formattedDate = date.toLocaleDateString('ru-RU');
-                document.getElementById("proUntilDate").textContent = `Подписка активна до: ${formattedDate}`;
-            } else {
-                // Если дата битая, просто скрываем эту строку
-                document.getElementById("proUntilDate").style.display = "none";
-            }
-        }
+if (isPro && data.proUntil) {
+    let date;
+    if (typeof data.proUntil.toDate === 'function') {
+        date = data.proUntil.toDate(); 
     } else {
-        proSection.style.display = "block";
-        proActiveSection.style.display = "none";
+        date = new Date(data.proUntil); 
+    }
+
+    if (!isNaN(date.getTime())) {
+        const formattedDate = date.toLocaleDateString('ru-RU');
+        document.getElementById("proUntilDate").textContent = `Подписка активна до: ${formattedDate}`;
     }
 }
 
@@ -929,6 +933,8 @@ if (proSection && proActiveSection) {
         console.error("Ошибка загрузки Firestore:", e.message);
     }
 }
+
+
 
 // === Firestore: сохранение данных ===
 async function saveUserData() {
