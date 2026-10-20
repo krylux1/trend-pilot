@@ -789,7 +789,7 @@ body {
 .socials-right {
     position: absolute;
     right: -80px; /* Выносим иконки правее контейнера с текстом */
-    top: 50%; /* Центрируем по вертикали */
+    top: 85%; /* Центрируем по вертикали */
     transform: translateY(-50%); /* Точное центрирование */
     display: flex;
     gap: 24px;
