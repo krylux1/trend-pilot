@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trend Pilot для бизнеса</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="image/favicon 32.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* Убираем лишний отступ body, который был на главной */
+        body { padding: 0 !important; background: #000; color: #fff; font-family: 'Inter', sans-serif; }
+        
+        /* Контейнер для ограничения ширины, как на главной */
+        .b2b-wrapper {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 30px 20px 0 20px;
+        }
+
+        /* Шапка */
+        .b2b-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+        }
+        .b2b-back-btn {
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+        .b2b-back-btn:hover { color: #fff; border-color: #666; background: rgba(255,255,255,0.05); }
+
+        /* Главный экран */
+        .b2b-hero {
+            text-align: center;
+            padding: 40px 0 60px;
+        }
+        .b2b-hero h1 {
+            font-size: 40px;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            background: linear-gradient(180deg, #fff 0%, #888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .b2b-hero p {
+            font-size: 18px;
+            color: #aaa;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+        .b2b-btn {
+            display: inline-block;
+            background: #fff;
+            color: #000;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 16px 36px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .b2b-btn:hover { background: #ddd; transform: translateY(-1px); }
+
+        /* Сетка преимуществ */
+        .b2b-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+        .b2b-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 28px;
+            text-align: left;
+        }
+        .b2b-card h3 { color: #fff; font-size: 18px; margin-bottom: 12px; }
+        .b2b-card p { color: #888; font-size: 15px; line-height: 1.6; margin: 0; }
+
+        /* Тариф */
+        .b2b-pricing-card {
+            margin: 0 auto 60px;
+            background: linear-gradient(135deg, #0d0d0d 0%, #050505 100%);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 16px;
+            padding: 40px 32px;
+            text-align: center;
+        }
+        .b2b-pricing-card h2 { font-size: 28px; margin-bottom: 8px; }
+        .b2b-pricing-card .plan-desc { color: #888; font-size: 15px; margin-bottom: 24px; }
+        .b2b-pricing-card .price { font-size: 42px; font-weight: 700; color: #fff; margin-bottom: 24px; }
+        .b2b-pricing-card .price span { font-size: 16px; color: #666; font-weight: normal; }
+        .b2b-pricing-card ul {
+            list-style: none; color: #aaa; text-align: left;
+            margin-bottom: 32px; line-height: 2.2; padding-left: 10px;
+        }
+        .b2b-pricing-card ul li { display: flex; align-items: center; gap: 10px; }
+        .b2b-pricing-card ul li::before { content: "✓"; color: #4caf50; font-weight: bold; font-size: 18px; }
+        .b2b-btn-full { display: block; width: 100%; text-align: center; }
+        .b2b-pricing-note { color: #666; font-size: 14px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <!-- Шапка (Использует классы nav-switch из style.css) -->
+    <header class="b2b-wrapper b2b-header">
+        <div class="nav-switch">
+            <a href="/" class="nav-switch__item">Trend Pilot</a>
+            <a href="b2b.html" class="nav-switch__item active">B2B</a>
+        </div>
+        <a href="/" class="b2b-back-btn">← На главную</a>
+    </header>
+
+    <main class="b2b-wrapper">
+        <!-- Главный экран -->
+        <section class="b2b-hero">
+            <h1>Генерируйте контент для клиентов быстрее</h1>
+            <p>Trend Pilot помогает SMM-командам и агентствам избавиться от «пустого экрана» и выдавать идеи для соцсетей в 10 раз быстрее.</p>
+            <a href="https://t.me/aneolead" target="_blank" class="b2b-btn">Запросить демо в Telegram</a>
+        </section>
+
+        <!-- Преимущества -->
+        <section class="b2b-features">
+            <div class="b2b-card">
+                <h3>⚡️ Скорость</h3>
+                <p>Не нужно писать промпты и ждать ответа от ChatGPT. Нажмите кнопку и получите готовую идею с хуком и сценарием за 2 секунды.</p>
+            </div>
+            <div class="b2b-card">
+                <h3>🎯 Под клиента</h3>
+                <p>Фильтруйте идеи по нишам (бизнес, фитнес, игры, образование) и форматам. Подходит для любого проекта вашего агентства.</p>
+            </div>
+            <div class="b2b-card">
+                <h3>🧠 Без выгорания</h3>
+                <p>Ваши копирайтеры больше не тратят часы на брейнштормы. База из 300+ идей всегда под рукой.</p>
+            </div>
+            <div class="b2b-card">
+                <h3>🔗 Удобно</h3>
+                <p>Работает на любом устройстве. Не нужно ничего устанавливать. Доступ открывается по ссылке.</p>
+            </div>
+        </section>
+
+        <!-- Тариф -->
+        <section class="b2b-pricing-card">
+            <h2>Team Plan</h2>
+            <p class="plan-desc">Доступ для всей команды по одному аккаунту (до 10 человек)</p>
+            <div class="price">5 000 ₽ <span>/ мес</span></div>
+            <ul>
+                <li>Безлимит идей для всей команды</li>
+                <li>Доступ ко всем нишам и форматам</li>
+                <li>Приоритетная поддержка</li>
+                <li>Помощь с внедрением</li>
+            </ul>
+            <a href="https://t.me/aneolead" target="_blank" class="b2b-btn b2b-btn-full">Обсудить внедрение</a>
+            <p class="b2b-pricing-note">Или запросите бесплатный пилот на 7 дней</p>
+        </section>
+    </main>
+
+    <!-- Подвал (Использует классы из style.css, как на главной) -->
+    <footer class="site-footer">
+        <div class="site-footer__inner">
+            <div class="site-footer__brand">Trend Pilot</div>
+            <p class="site-footer__line">© 2026  Все права защищены</p>
+            <p class="site-footer__line">Самозанятый Казикаев А. Д.</p>
+            <p class="site-footer__line">ИНН 860807034174</p>
+            <p class="site-footer__line"><a href="mailto:alexneolead@gmail.com">alexneolead@gmail.com</a></p>
+        </div>
+    </footer>
+
+</body>
+</html>

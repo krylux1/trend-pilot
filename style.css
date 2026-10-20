@@ -753,3 +753,33 @@ body {
 .subscription-section--active::before {
     background: linear-gradient(90deg, transparent 0%, rgba(76, 175, 80, 0.5) 50%, transparent 100%);
 }
+
+/* --- Переключатель (Tabs) --- */
+.nav-switch {
+    display: inline-flex;
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 10px;
+    padding: 4px;
+    gap: 4px;
+}
+
+.nav-switch__item {
+    padding: 8px 20px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #888;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.nav-switch__item:hover {
+    color: #fff;
+}
+
+/* Активная вкладка (в данном случае B2B) */
+.nav-switch__item.active {
+    background: #fff;
+    color: #000;
+}
