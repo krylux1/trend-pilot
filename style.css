@@ -803,7 +803,7 @@ body {
     .socials-right {
         position: static;
         justify-content: center;
-        margin-top: 40px;
+        margin-top: 80px;
         gap: 20px;
     }
 }
