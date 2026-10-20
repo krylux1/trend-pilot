@@ -783,3 +783,26 @@ body {
     background: #fff;
     color: #000;
 }
+
+/* Соцсети справа в подвале */
+/* Иконки соцсетей в подвале */
+.socials-right {
+    position: absolute;
+    right: -80px; /* Выносим иконки правее контейнера с текстом */
+    top: 50%; /* Центрируем по вертикали */
+    transform: translateY(-50%); /* Точное центрирование */
+    display: flex;
+    gap: 24px;
+}
+.socials-right a { color: #444; transition: 0.2s; display: inline-flex; }
+.socials-right a:hover { color: #fff; }
+.socials-right svg { width: 56px; height: 56px; }
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+    .socials-right {
+        position: static;
+        justify-content: center;
+        margin-top: 20px;
+    }
+}
