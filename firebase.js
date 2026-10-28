@@ -1,3 +1,4 @@
+
 // === Firebase SDK ===
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
@@ -29,5 +30,3 @@ window.FirebaseAPI = {
     signOut,
     onAuthStateChanged
 };
-
-console.log("Firebase инициализирован");
