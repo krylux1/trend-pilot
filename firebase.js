@@ -5,7 +5,7 @@ import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstati
 
 const firebaseConfig = {
     apiKey: "AIzaSyDE3ADMpDToXs-T1g42ed-JfKM8_Us8KW4",
-    authDomain: "trend-pilot-1c168.firebaseapp.com",
+    authDomain: "trendpilot.ru",
     projectId: "trend-pilot-1c168",
     storageBucket: "trend-pilot-1c168.firebasestorage.app",
     messagingSenderId: "518552286449",
