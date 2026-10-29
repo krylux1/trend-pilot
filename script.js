@@ -7956,3 +7956,13 @@ if (payBtn) {
     });
 }
 
+// Сброс кнопки оплаты, если пользователь вернулся на страницу из кэша (например, из ЮKassa)
+window.addEventListener("pageshow", (event) => {
+    if (payBtn) {
+        payBtn.disabled = false;
+        payBtn.textContent = "Оплатить 299 ₽";
+    }
+});
+
+
+
