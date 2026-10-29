@@ -7917,7 +7917,9 @@ function renderState(icon, title, subtitle, ctaText, ctaAction) {
 }
 
     // === Оплата (ЮKassa) ===
+// === Оплата (ЮKassa) ===
 const payBtn = document.getElementById("payBtn");
+
 if (payBtn) {
     payBtn.addEventListener("click", async () => {
         const auth = window.FirebaseAPI?.auth;
@@ -7941,9 +7943,11 @@ if (payBtn) {
             const data = await response.json();
 
             if (data.confirmation_url) {
-                window.location.href = data.confirmation_url; // Перенаправляем на форму ЮKassa
+                window.location.href = data.confirmation_url; 
             } else {
-                alert("Ошибка создания платежа: " + JSON.stringify(data.error));
+                const realError = data.description || data.error || JSON.stringify(data);
+                console.error("Детали ошибки от сервера:", data);
+                alert("Ошибка ЮKassa: " + realError);
                 payBtn.disabled = false;
                 payBtn.textContent = "Оплатить 299 ₽";
             }
@@ -7953,8 +7957,8 @@ if (payBtn) {
             payBtn.disabled = false;
             payBtn.textContent = "Оплатить 299 ₽";
         }
-    });
-}
+    }); // Закрыли addEventListener
+} // <--- ВОТ ЭТА СКОБКА БЫЛА ПОТЕРЯНА! Она закрывает if (payBtn)
 
 // Сброс кнопки оплаты, если пользователь вернулся на страницу из кэша (например, из ЮKassa)
 window.addEventListener("pageshow", (event) => {
@@ -7963,6 +7967,5 @@ window.addEventListener("pageshow", (event) => {
         payBtn.textContent = "Оплатить 299 ₽";
     }
 });
-
 
 
