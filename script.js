@@ -7940,11 +7940,12 @@ if (payBtn) {
                 body: JSON.stringify({ userId: user.uid })
             });
 
-            const data = await response.json();
+                    const data = await response.json();
 
-            if (data.confirmation_url) {
-                window.location.href = data.confirmation_url; 
-            } else {
+        if (data.confirmation && data.confirmation.confirmation_url) {
+            window.location.href = data.confirmation.confirmation_url;
+        } else {
+            
                 const realError = data.description || data.error || JSON.stringify(data);
                 console.error("Детали ошибки от сервера:", data);
                 alert("Ошибка ЮKassa: " + realError);
