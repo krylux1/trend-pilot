@@ -7932,7 +7932,7 @@ if (payBtn) {
         payBtn.textContent = "Создаем платеж...";
 
         try {
-            const response = await fetch("https://api.trendpilot.ru/create-payment", {
+            const response = await fetch("https://trendpilot-pay.de1.netrun.io/", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ userId: user.uid })
