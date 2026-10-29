@@ -7932,7 +7932,7 @@ if (payBtn) {
         payBtn.textContent = "Создаем платеж...";
 
         try {
-            const response = await fetch("https://trend-pilot-63c8.unityfoster791.workers.dev/create-payment", {
+            const response = await fetch("https://api.trendpilot.ru/create-payment", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ userId: user.uid })
