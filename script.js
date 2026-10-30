@@ -7599,9 +7599,10 @@ function renderSavedIdeas() {
         const btn = document.getElementById("loginBtnInline");
         if (btn) {
             btn.addEventListener("click", async () => {
-                const { GoogleAuthProvider, signInWithPopup } = window.FirebaseAPI;
                 try {
-                    await signInWithPopup(auth, new GoogleAuthProvider());
+                    const provider = new GoogleAuthProvider();
+                    provider.setCustomParameters({ prompt: 'select_account' });
+                    await signInWithPopup(auth, provider);
                 } catch (e) {
                     console.error("Ошибка входа:", e.message);
                 }
