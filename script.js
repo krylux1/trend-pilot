@@ -7600,8 +7600,14 @@ function renderSavedIdeas() {
         if (btn) {
             btn.addEventListener("click", async () => {
                 try {
+                    // Достаем провайдер и функцию из Firebase
+                    const { GoogleAuthProvider, signInWithPopup } = window.FirebaseAPI;
+                    
+                    // Создаем провайдер и просим выбрать аккаунт
                     const provider = new GoogleAuthProvider();
                     provider.setCustomParameters({ prompt: 'select_account' });
+                    
+                    // Запускаем вход
                     await signInWithPopup(auth, provider);
                 } catch (e) {
                     console.error("Ошибка входа:", e.message);
