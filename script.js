@@ -7969,4 +7969,6 @@ window.addEventListener("pageshow", (event) => {
     }
 });
 
-
+// Разбудить сервер Netrun при заходе на сайт (страховка от засыпания)
+fetch("https://trendpilot-pay.de1.netrun.io/")
+    .catch(() => console.log("Пинг Netrun отправлен"));
