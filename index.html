@@ -104,6 +104,30 @@
 
         <section class="saved-section">
             <h2 class="saved-title">Сохранённые идеи</h2>
+            <div style="max-width: 800px; margin: 60px auto; padding: 0 20px; text-align: center;">
+    <h3 style="color: #fff; font-size: 22px; margin-bottom: 30px; font-weight: 500;">Как это работает</h3>
+    <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+        
+        <div style="flex: 1; min-width: 200px; background: #111; border: 1px solid #333; padding: 25px 20px; border-radius: 16px;">
+            <div style="font-size: 28px; margin-bottom: 15px;">🎯</div>
+            <div style="color: #fff; font-weight: 600; margin-bottom: 8px; font-size: 16px;">Выбор</div>
+            <div style="color: #888; font-size: 14px; line-height: 1.5;">Укажите нишу и нужный формат контента</div>
+        </div>
+
+        <div style="flex: 1; min-width: 200px; background: #111; border: 1px solid #333; padding: 25px 20px; border-radius: 16px;">
+            <div style="font-size: 28px; margin-bottom: 15px;">⚡</div>
+            <div style="color: #fff; font-weight: 600; margin-bottom: 8px; font-size: 16px;">Генерация</div>
+            <div style="color: #888; font-size: 14px; line-height: 1.5;">Нажмите кнопку и получите готовую идею</div>
+        </div>
+
+        <div style="flex: 1; min-width: 200px; background: #111; border: 1px solid #333; padding: 25px 20px; border-radius: 16px;">
+            <div style="font-size: 28px; margin-bottom: 15px;">🚀</div>
+            <div style="color: #fff; font-weight: 600; margin-bottom: 8px; font-size: 16px;">Контент</div>
+            <div style="color: #888; font-size: 14px; line-height: 1.5;">Используйте хук и снимайте без задержек</div>
+        </div>
+
+    </div>
+</div>
             <div id="savedIdeas" class="saved-ideas"></div>
         </section>
 
@@ -143,26 +167,50 @@
 
     </main>
 
-    <footer class="site-footer">
-    <div class="site-footer__inner" style="position: relative;">
-        <div class="site-footer__text">
-            <div class="site-footer__brand">Trend Pilot</div>
-            <p class="site-footer__line">© 2026  Все права защищены</p>
-            <p class="site-footer__line">Самозанятый Казикаев А. Д.</p>
-            <p class="site-footer__line">ИНН 860807034174</p>
-            <p class="site-footer__line"><a href="mailto:alexneolead@gmail.com">alexneolead@gmail.com</a></p>
+<footer style="border-top: 1px solid #222; padding: 50px 20px; background: #000; margin-top: 40px; position: relative;">
+    
+    <!-- Центральный текстовый блок -->
+    <div style="max-width: 700px; margin: 0 auto; text-align: center;">
+        <div style="color: #fff; font-weight: bold; font-size: 20px; margin-bottom: 15px; letter-spacing: 0.5px;">Trend Pilot</div>
+        
+        <div style="display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; margin-bottom: 20px;">
+            <a href="/terms.html" style="color: #888; text-decoration: none; font-size: 15px; transition: 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'">Публичная оферта</a>
+            <a href="/privacy.html" style="color: #888; text-decoration: none; font-size: 15px; transition: 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'">Политика конфиденциальности</a>
+            <a href="mailto:alexneolead@gmail.com" style="color: #888; text-decoration: none; font-size: 15px; transition: 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'">Поддержка</a>
         </div>
-
-        <!-- Вот здесь те самые иконки -->
-        <div class="socials-right">
-            <a href="https://t.me/aneolead" target="_blank" rel="noopener noreferrer" title="Telegram">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-            </a>
-            <a href="https://www.youtube.com/@neolead_channel" target="_blank" rel="noopener noreferrer" title="YouTube">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-            </a>
+        
+        <div style="font-size: 14px; color: #555; display: flex; flex-direction: column; gap: 8px; line-height: 1.5;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 5px; margin-bottom: 5px;">
+                <span style="color: #777;">🔒 Безопасная оплата через <b style="color: #999;">ЮKassa</b></span>
+            </div>
+            <div>Самозанятый Казикаев А. Д.  ИНН 860807034174</div>
+            <div>© 2026 Trend Pilot. Все права защищены.</div>
         </div>
     </div>
+
+    <!-- Кнопки соцсетей (сдвинуты левее и увеличены) -->
+    <div style="position: absolute; right: 120px; top: 50%; transform: translateY(-50%); display: flex; gap: 18px;">
+        <!-- Telegram -->
+        <a href="https://t.me/твой_ник" target="_blank" style="display: flex; justify-content: center; align-items: center; width: 60px; height: 60px; background: #1a1a1a; border-radius: 50%; color: #777; transition: 0.3s;" onmouseover="this.style.background='#333'; this.style.color='#fff'" onmouseout="this.style.background='#1a1a1a'; this.style.color='#777'">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        </a>
+        <!-- YouTube -->
+        <a href="https://youtube.com/твой_канал" target="_blank" style="display: flex; justify-content: center; align-items: center; width: 60px; height: 60px; background: #1a1a1a; border-radius: 50%; color: #777; transition: 0.3s;" onmouseover="this.style.background='#333'; this.style.color='#fff'" onmouseout="this.style.background='#1a1a1a'; this.style.color='#777'">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </a>
+    </div>
+
+    <!-- Адаптация для телефонов -->
+    <style>
+        @media (max-width: 1050px) {
+            footer div[style*="position: absolute"] {
+                position: static !important;
+                transform: none !important;
+                margin-top: 30px;
+                justify-content: center;
+            }
+        }
+    </style>
 </footer>
 
     <script type="module" src="firebase.js"></script>
