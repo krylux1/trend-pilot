@@ -7357,12 +7357,30 @@ console.log("Всего идей:", ideas.length);
 // === DOM ===
 const ideaElement = document.getElementById("idea");
 const button = document.getElementById("ideaButton");
-if (button) {
-    button.disabled = false;
-    button.textContent = "Получить идею";
-    button.style.opacity = "1";
-    button.style.cursor = "pointer";
+// Умная проверка состояния кнопки при загрузке страницы
+try {
+    const isGuest = !window.FirebaseAPI?.auth?.currentUser;
+    const savedCount = parseInt(localStorage.getItem("trendPilotCount")) || 0;
+    
+    if (button) {
+        // Если гость и лимит исчерпан — фиксируем "Лимит"
+        if (isGuest && savedCount >= 3) {
+            button.disabled = true;
+            button.textContent = "Лимит исчерпан";
+            button.style.opacity = "0.5";
+            button.style.cursor = "not-allowed";
+        } else {
+            // Если лимит не исчерпан — кнопка рабочая
+            button.disabled = false;
+            button.textContent = "Получить идею";
+            button.style.opacity = "1";
+            button.style.cursor = "pointer";
+        }
+    }
+} catch (e) {
+    // Если что-то пойдет не так, сайт просто проигнорирует
 }
+
 const saveButton = document.getElementById("saveButton");
 const savedIdeasElement = document.getElementById("savedIdeas");
 const changeTypeButton = document.getElementById("changeTypeButton");
@@ -7715,6 +7733,12 @@ function renderSavedIdeas() {
 button.addEventListener("click", () => {
     if (ideasCount >= 3 && !isB2B && !isPro) {
         renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра");
+
+        // ЖЕСТКО ВЫКЛЮЧАЕМ КНОПКУ ПРИ КЛИКЕ
+        button.disabled = true;
+        button.textContent = "Лимит исчерпан";
+        button.style.opacity = "0.5";
+        
         return;
     }
 
