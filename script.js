@@ -7466,7 +7466,7 @@ if (!currentType) {
     showMainContent();
     updateSettingsBar();
     if (ideasCount >= 3 && !isB2B && !isPro) {
-        renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра — будет ещё 3");
+        renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра");
     } else if (!currentIdea) {
         renderState("🎯", "Здесь появится идея", "Нажми «Получить идею»");
         const btn = document.getElementById("ideaButton");
@@ -7805,7 +7805,7 @@ function initAuth() {
 
             // Если лимит уже исчерпан - сразу показываем плашку и блокируем кнопку
             if (ideasCount >= 3) {
-                renderState("⏰", "Идеи на сегодня закончились", "Оформи Pro, чтобы получить безлимит");
+                renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра");
                 
                 const mainButton = document.getElementById("ideaButton") || button;
                 if (mainButton) {
@@ -7903,7 +7903,7 @@ if (isPro && data.proUntil) {
     // Обновляем отображение лимита
     // Обновляем отображение лимита
     if (ideasCount >= 3 && !isB2B && !isPro) {
-        renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра — будут ещё ");
+        renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра");
     } else if (!currentIdea) {
     renderState("🎯", "Здесь появится идея", "Нажми «Получить идею»");
     const btn = document.getElementById("ideaButton");
