@@ -7357,6 +7357,7 @@ console.log("Всего идей:", ideas.length);
 // === DOM ===
 const ideaElement = document.getElementById("idea");
 const button = document.getElementById("ideaButton");
+if (button) button.disabled = false; // <--- ДОБАВЬ ВОТ ЭТО
 const saveButton = document.getElementById("saveButton");
 const savedIdeasElement = document.getElementById("savedIdeas");
 const changeTypeButton = document.getElementById("changeTypeButton");
