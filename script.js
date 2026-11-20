@@ -7834,22 +7834,24 @@ function initAuth() {
 window.addEventListener("load", () => {
     setTimeout(initAuth, 500);
 
-    // БЕЗОПАСНАЯ проверка кнопки гостя
-    try {
-        const isGuest = !window.FirebaseAPI?.auth?.currentUser;
-        const savedCount = parseInt(localStorage.getItem("trendPilotCount")) || 0;
-        const btn = document.getElementById("ideaButton");
-        
-        if (isGuest && savedCount >= 3 && btn) {
-            btn.disabled = true;
-            btn.textContent = "Лимит исчерпан";
-            btn.style.opacity = "0.5";
-            btn.style.cursor = "not-allowed";
+    // БЕЗОПАСНАЯ проверка кнопки (без isB2B, чтобы не было ошибок)
+    setTimeout(() => {
+        try {
+            const isGuest = !window.FirebaseAPI?.auth?.currentUser;
+            const savedCount = parseInt(localStorage.getItem("trendPilotCount")) || 0;
+            const btn = document.getElementById("ideaButton");
+            
+            if (isGuest && savedCount >= 3 && btn) {
+                btn.disabled = true;
+                btn.textContent = "Лимит исчерпан";
+                btn.style.opacity = "0.5";
+                btn.style.cursor = "not-allowed";
+            }
+        } catch (e) {
+            // Если что-то пойдет не так, сайт просто проигнорирует это и продолжит работать
+            console.warn("Ошибка проверки лимита:", e);
         }
-    } catch (e) {
-        console.warn("Ошибка проверки лимита:", e);
-        // Если тут что-то сломается, сайт продолжит работать!
-    }
+    }, 1000); // Ждем 1 секунду, чтобы все переменные точно загрузились
 });
 
 // === Firestore: загрузка данных юзера ===
