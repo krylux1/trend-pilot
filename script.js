@@ -8007,3 +8007,28 @@ window.addEventListener("pageshow", (event) => {
 // Разбудить сервер Netrun при заходе на сайт (страховка от засыпания)
 fetch("https://trendpilot-pay.de1.netrun.io/")
     .catch(() => console.log("Пинг Netrun отправлен"));
+
+// БЕЗОПАСНАЯ ПРОВЕРКА КНОПКИ (НЕ ЛОМАЕТ САЙТ)
+window.addEventListener('load', () => {
+    // Ждем 1 секунду, чтобы сайт полностью загрузился и включил все кнопки
+    setTimeout(() => {
+        try {
+            const btn = document.getElementById("ideaButton");
+            if (!btn) return; // Если кнопки нет, выходим
+
+            const isGuest = !window.FirebaseAPI?.auth?.currentUser;
+            const count = parseInt(localStorage.getItem("trendPilotCount")) || 0;
+
+            // Если гость и лимит 3+, выключаем кнопку и пишем текст
+            if (isGuest && count >= 3) {
+                btn.disabled = true;
+                btn.textContent = "Лимит исчерпан";
+                btn.style.opacity = "0.5";
+                btn.style.cursor = "not-allowed";
+            }
+        } catch (e) {
+            // Если вдруг ошибка — мы просто пишем её в консоль, а сайт продолжает работать
+            console.log("Ошибка проверки лимита:", e);
+        }
+    }, 1000); 
+});
