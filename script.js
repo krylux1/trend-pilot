@@ -7380,6 +7380,25 @@ let savedIdeas = JSON.parse(localStorage.getItem(SAVED_IDEAS_KEY)) || [];
 let currentIdea = null;
 let currentType = localStorage.getItem(TYPE_KEY) || null;
 
+// === ФИКС ДЛЯ ГОСТЕЙ (Чтобы текст на кнопке не сбрасывался) ===
+function enforceButtonState() {
+    const isGuest = !window.FirebaseAPI?.auth?.currentUser;
+    const savedCount = parseInt(localStorage.getItem(COUNT_KEY)) || 0;
+    
+    // Если это гость и лимит 3 или больше, жестко фиксируем текст
+    if (isGuest && savedCount >= 3 && typeof isB2B !== 'undefined' && !isB2B && button) {
+        button.disabled = true;
+        button.textContent = "Лимит исчерпан";
+        button.style.opacity = "0.5";
+        button.style.cursor = "not-allowed";
+    }
+}
+
+// Вызываем сразу при загрузке скрипта
+enforceButtonState();
+// И еще раз через полсекунды, чтобы перебить кэш браузера
+setTimeout(enforceButtonState, 500);
+
 // === B2B-режим ===
 // === B2B-режим с автоистечением 7 дней ===
 const urlParams = new URLSearchParams(window.location.search);
@@ -7788,6 +7807,8 @@ function initAuth() {
         } else {
             console.log("Не авторизован");
             updateProUI(false); 
+
+            enforceButtonState();
 
             // --- ФИКС ДЛЯ ГОСТЕЙ ---
             // Загружаем счетчик из памяти (если нет, то 0)
