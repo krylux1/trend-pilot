@@ -7807,7 +7807,7 @@ function initAuth() {
         } else {
             console.log("Не авторизован");
             updateProUI(false); 
-            
+
 
             // --- ФИКС ДЛЯ ГОСТЕЙ ---
             // Загружаем счетчик из памяти (если нет, то 0)
@@ -7832,19 +7832,24 @@ function initAuth() {
 }
 
 window.addEventListener("load", () => {
-    // Принудительно проверяем лимит для гостя при загрузке
-    const isGuest = !window.FirebaseAPI?.auth?.currentUser;
-    const savedCount = parseInt(localStorage.getItem(COUNT_KEY)) || 0;
-    const btn = document.getElementById("ideaButton");
-    
-    if (isGuest && savedCount >= 3 && btn) {
-        btn.disabled = true;
-        btn.textContent = "Лимит исчерпан";
-        btn.style.opacity = "0.5";
-        btn.style.cursor = "not-allowed";
-    }
-
     setTimeout(initAuth, 500);
+
+    // БЕЗОПАСНАЯ проверка кнопки гостя
+    try {
+        const isGuest = !window.FirebaseAPI?.auth?.currentUser;
+        const savedCount = parseInt(localStorage.getItem("trendPilotCount")) || 0;
+        const btn = document.getElementById("ideaButton");
+        
+        if (isGuest && savedCount >= 3 && btn) {
+            btn.disabled = true;
+            btn.textContent = "Лимит исчерпан";
+            btn.style.opacity = "0.5";
+            btn.style.cursor = "not-allowed";
+        }
+    } catch (e) {
+        console.warn("Ошибка проверки лимита:", e);
+        // Если тут что-то сломается, сайт продолжит работать!
+    }
 });
 
 // === Firestore: загрузка данных юзера ===
