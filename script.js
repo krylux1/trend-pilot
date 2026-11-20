@@ -7807,8 +7807,7 @@ function initAuth() {
         } else {
             console.log("Не авторизован");
             updateProUI(false); 
-
-            enforceButtonState();
+            
 
             // --- ФИКС ДЛЯ ГОСТЕЙ ---
             // Загружаем счетчик из памяти (если нет, то 0)
