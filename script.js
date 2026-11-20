@@ -7781,16 +7781,34 @@ function initAuth() {
     }
     const { auth, onAuthStateChanged } = window.FirebaseAPI;
 
-    onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(auth, async (user) => {
         if (user) {
-        console.log("Пользователь:", user.uid);
-        await loadUserData(user.uid);
-    } else {
-        console.log("Не авторизован");
-        updateProUI(false); // <--- ВОТ ЭТА СТРОКА ВАЖНА
-    }
-    renderSavedIdeas();
-});
+            console.log("Пользователь:", user.uid);
+            await loadUserData(user.uid);
+        } else {
+            console.log("Не авторизован");
+            updateProUI(false); 
+
+            // --- ФИКС ДЛЯ ГОСТЕЙ ---
+            // Загружаем счетчик из памяти (если нет, то 0)
+            ideasCount = parseInt(localStorage.getItem(COUNT_KEY)) || 0;
+
+            // Если лимит уже исчерпан - сразу показываем плашку и блокируем кнопку
+            if (ideasCount >= 3) {
+                renderState("⏰", "Идеи на сегодня закончились", "Оформи Pro, чтобы получить безлимит");
+                
+                const mainButton = document.getElementById("ideaButton") || button;
+                if (mainButton) {
+                    mainButton.disabled = true;
+                    mainButton.textContent = "Лимит исчерпан";
+                    mainButton.style.opacity = "0.5";
+                    mainButton.style.cursor = "not-allowed";
+                }
+            }
+            // ------------------------
+        }
+        renderSavedIdeas();
+    });
 }
 
 window.addEventListener("load", () => {
