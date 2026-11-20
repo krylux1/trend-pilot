@@ -7385,6 +7385,7 @@ let currentGenre = localStorage.getItem(GENRE_KEY) || null;
 let savedIdeas = JSON.parse(localStorage.getItem(SAVED_IDEAS_KEY)) || [];
 let currentIdea = null;
 let currentType = localStorage.getItem(TYPE_KEY) || null;
+let isPro = false;
 
 
 
@@ -7825,8 +7826,6 @@ window.addEventListener("load", () => {
 
 });
 
-// === Firestore: загрузка данных юзера ===
-let isPro = false; 
 
 // Функция для переключения блоков Pro
 function updateProUI(isProStatus) {
