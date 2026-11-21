@@ -7870,8 +7870,7 @@ function initAuth() {
 }
 
 window.addEventListener("load", () => {
-    setTimeout(initAuth, 500);
-
+    initAuth();
 });
 
 
