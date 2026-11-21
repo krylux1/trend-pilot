@@ -7604,40 +7604,37 @@ function renderIdea(idea) {
 }
 
 // === Сохранённые ===
+
+// === Сохранённые ===
 function renderSavedIdeas() {
     savedIdeasElement.innerHTML = "";
 
     const auth = window.FirebaseAPI?.auth;
 
-    // 1. Если юзер НЕ вошёл — показываем кнопку входа
     if (!auth || !auth.currentUser) {
         savedIdeasElement.innerHTML = `
             <p style="color:#888; margin-bottom:12px;">Войди, чтобы сохранять идеи.</p>
             <button class="auth-btn" id="loginBtnInline">Войти через Google</button>
         `;
+
         const btn = document.getElementById("loginBtnInline");
+
         if (btn) {
-            btn.addEventListener("click", async () => {
-                try {
-                    // Достаем провайдер и функцию из Firebase
-                    const { GoogleAuthProvider, signInWithPopup } = window.FirebaseAPI;
-                    
-                    // Создаем провайдер и просим выбрать аккаунт
-                    const provider = new GoogleAuthProvider();
-                    provider.setCustomParameters({ prompt: 'select_account' });
-                    
-                    // Запускаем вход
-                    await signInWithPopup(auth, provider);
-                } catch (e) {
-                    console.error("Ошибка входа:", e.message);
-                }
+            btn.addEventListener("click", () => {
+                const { GoogleAuthProvider, signInWithPopup } = window.FirebaseAPI;
+                const provider = new GoogleAuthProvider();
+
+                signInWithPopup(auth, provider).catch(e => {
+                    console.error("Ошибка входа:", e);
+                });
             });
         }
+
         return;
     }
 
-    // 2. Юзер вошёл — показываем имя и "Выйти"
     const user = auth.currentUser;
+
     const header = document.createElement("div");
     header.classList.add("user-header");
 
@@ -7648,6 +7645,7 @@ function renderSavedIdeas() {
     const logoutBtn = document.createElement("button");
     logoutBtn.classList.add("logout-btn");
     logoutBtn.textContent = "Выйти";
+
     logoutBtn.addEventListener("click", async () => {
         const { signOut } = window.FirebaseAPI;
         try {
@@ -7661,7 +7659,6 @@ function renderSavedIdeas() {
     header.appendChild(logoutBtn);
     savedIdeasElement.appendChild(header);
 
-    // 3. Если идей нет — сообщение
     if (savedIdeas.length === 0) {
         const empty = document.createElement("div");
         empty.style.color = "#888";
@@ -7670,7 +7667,6 @@ function renderSavedIdeas() {
         return;
     }
 
-    // 4. Рендер сохранённых идей
     savedIdeas.forEach((idea, index) => {
         const ideaItem = document.createElement("div");
         ideaItem.classList.add("saved-idea");
@@ -7681,6 +7677,7 @@ function renderSavedIdeas() {
         const ideaText = document.createElement("div");
         ideaText.classList.add("saved-idea__text");
         ideaText.textContent = typeof idea === "string" ? idea : idea.text;
+
         if (typeof idea === "object") {
             ideaText.style.cursor = "pointer";
             ideaText.title = "Нажми, чтобы раскрыть";
@@ -7689,6 +7686,7 @@ function renderSavedIdeas() {
         const details = document.createElement("div");
         details.classList.add("saved-details");
         details.style.display = "none";
+
         if (typeof idea === "object") {
             details.innerHTML = `
                 <p><strong>Почему:</strong> ${idea.why}</p>
@@ -7698,17 +7696,20 @@ function renderSavedIdeas() {
         }
 
         ideaText.addEventListener("click", () => {
-            details.style.display = details.style.display === "none" ? "block" : "none";
+            details.style.display =
+                details.style.display === "none" ? "block" : "none";
         });
 
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Удалить";
         deleteButton.classList.add("delete-button");
+
         deleteButton.addEventListener("click", (e) => {
             e.stopPropagation();
             savedIdeas.splice(index, 1);
             localStorage.setItem(SAVED_IDEAS_KEY, JSON.stringify(savedIdeas));
             renderSavedIdeas();
+
             if (window.FirebaseAPI?.auth?.currentUser) {
                 saveUserData();
             }
@@ -7721,6 +7722,7 @@ function renderSavedIdeas() {
         savedIdeasElement.appendChild(ideaItem);
     });
 }
+
 
 // === Получить идею ===
 button.addEventListener("click", async () => {
