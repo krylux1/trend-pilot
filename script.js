@@ -1,6 +1,16 @@
 // === МАССИВ ИДЕЙ ===
 // Формат: { text, type, why, how, hook }
 // TODO: расширить до 200 (по 50 на тип)
+
+const API_URL = "https://trendpilot-api.unityfoster791.workers.dev";
+
+let guestId = localStorage.getItem("trendPilotGuestId");
+
+if (!guestId) {
+    guestId = crypto.randomUUID();
+    localStorage.setItem("trendPilotGuestId", guestId);
+}
+
 const ideas = [
         // Video — новые (45)
     // Video — all
@@ -7713,51 +7723,90 @@ function renderSavedIdeas() {
 }
 
 // === Получить идею ===
-button.addEventListener("click", () => {
-    if (ideasCount >= 3 && !isB2B && !isPro) {
-        renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра");
-        return;
-    }
+button.addEventListener("click", async () => {
+    button.disabled = true;
+    button.textContent = "Загружаю...";
 
-    let filtered = getFilteredIdeas();
+    try {
+        const user = window.FirebaseAPI?.auth?.currentUser;
+        const headers = { "X-Guest-ID": guestId };
 
-    // Исключаем последние 5 показанных идей
-    const HISTORY_KEY = "trendPilotHistory";
-    const history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
-    if (filtered.length > history.length + 1) {
-        filtered = filtered.filter(i => !history.includes(i.text));
-    }
-
-    if (filtered.length === 0) {
-        renderState("🔍", "Для этой ниши пока нет идей", "Попробуй другую нишу или формат");
-        return;
-    }
-
-    const randomIndex = Math.floor(Math.random() * filtered.length);
-    currentIdea = filtered[randomIndex];
-    renderIdea(currentIdea);
-
-        // Убираем пульс
-    const ideaBtn = document.getElementById("ideaButton");
-    if (ideaBtn) ideaBtn.classList.remove("pulse");
-
-    // Сохраняем в историю
-    history.push(currentIdea.text);
-    if (history.length > 5) history.shift();
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-
-    ideasCount++;
-    localStorage.setItem(COUNT_KEY, ideasCount);
-    localStorage.setItem(IDEA_KEY, JSON.stringify(currentIdea));
-
-    if (window.FirebaseAPI?.auth?.currentUser) {
-        saveUserData();
-    }
-    if (window.goatcounter && window.goatcounter.count) {
-        window.goatcounter.count({ path: "generate_idea_" + currentType, event: true });
-        if (isB2B) {
-            window.goatcounter.count({ path: "b2b_idea_" + b2bCode, event: true });
+        if (user) {
+            headers.Authorization = `Bearer ${await user.getIdToken()}`;
         }
+
+        const response = await fetch(
+            `${API_URL}/ideas?type=${encodeURIComponent(currentType)}&genre=all`,
+            { headers }
+        );
+
+        const data = await response.json();
+
+        if (response.status === 429) {
+            renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра");
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error(data.error || "Ошибка API");
+        }
+
+        const history = JSON.parse(
+            localStorage.getItem("trendPilotHistory") || "[]"
+        );
+
+        let filtered = data.ideas.filter(
+            idea => !history.includes(idea.text)
+        );
+
+        if (!filtered.length) filtered = data.ideas;
+
+        if (!filtered.length) {
+            renderState("🔍", "Идеи не найдены", "Попробуй другой формат");
+            return;
+        }
+
+        currentIdea = filtered[Math.floor(Math.random() * filtered.length)];
+        renderIdea(currentIdea);
+
+        const ideaBtn = document.getElementById("ideaButton");
+        if (ideaBtn) ideaBtn.classList.remove("pulse");
+
+        history.push(currentIdea.text);
+        if (history.length > 5) history.shift();
+
+        localStorage.setItem("trendPilotHistory", JSON.stringify(history));
+        localStorage.setItem(IDEA_KEY, JSON.stringify(currentIdea));
+
+        if (typeof data.remaining === "number") {
+            ideasCount = 3 - data.remaining;
+            localStorage.setItem(COUNT_KEY, ideasCount);
+        }
+
+        if (user) {
+            await saveUserData();
+        }
+
+        if (window.goatcounter?.count) {
+            window.goatcounter.count({
+                path: "generate_idea_" + currentType,
+                event: true
+            });
+
+            if (isB2B) {
+                window.goatcounter.count({
+                    path: "b2b_idea_" + b2bCode,
+                    event: true
+                });
+            }
+        }
+
+    } catch (error) {
+        console.error(error);
+        renderState("⚠️", "Не удалось получить идею", "Попробуй ещё раз");
+    } finally {
+        button.disabled = false;
+        button.textContent = "Получить идею";
     }
 });
 
@@ -7844,83 +7893,70 @@ function updateProUI(isProStatus) {
 }
 
 async function loadUserData(uid) {
-    const { db, doc, getDoc, updateDoc, setDoc, auth } = window.FirebaseAPI;
+    const { db, doc, getDoc, setDoc, auth } = window.FirebaseAPI;
+
     try {
         const userRef = doc(db, "users", uid);
         const snap = await getDoc(userRef);
 
         if (snap.exists()) {
             const data = snap.data();
+
             savedIdeas = data.savedIdeas || [];
-            ideasCount = data.ideasCount || 0;
-            // Внутри функции loadUserData:
-let proUntilDate = null;
 
-if (data.proUntil) {
-    proUntilDate = typeof data.proUntil.toDate === "function"
-        ? data.proUntil.toDate()
-        : new Date(data.proUntil);
-}
+            let proUntilDate = null;
 
-isPro = data.isPro === true &&
-        proUntilDate !== null &&
-        !isNaN(proUntilDate.getTime()) &&
-        proUntilDate > new Date();
-
-updateProUI(isPro);
-console.log("isPro:", isPro);
-
-const proSection = document.getElementById("proSection");
-const proActiveSection = document.getElementById("proActiveSection");
-
-if (isPro && proUntilDate) {
-    let date;
-    if (typeof data.proUntil.toDate === 'function') {
-        date = data.proUntil.toDate(); 
-    } else {
-        date = new Date(data.proUntil); 
-    }
-
-    if (!isNaN(date.getTime())) {
-        const formattedDate = date.toLocaleDateString('ru-RU');
-        document.getElementById("proUntilDate").textContent = `Подписка активна до: ${formattedDate}`;
-    }
-}
-
-            const today = new Date().toISOString().split("T")[0];
-            if (data.lastResetDate !== today) {
-                ideasCount = 0;
-                await updateDoc(userRef, { ideasCount: 0, lastResetDate: today });
+            if (data.proUntil) {
+                proUntilDate = typeof data.proUntil.toDate === "function"
+                    ? data.proUntil.toDate()
+                    : new Date(data.proUntil);
             }
 
-            localStorage.setItem(SAVED_IDEAS_KEY, JSON.stringify(savedIdeas));
-            console.log("Данные загружены из Firestore");
+            isPro = data.isPro === true &&
+                proUntilDate !== null &&
+                !isNaN(proUntilDate.getTime()) &&
+                proUntilDate > new Date();
+
+            updateProUI(isPro);
+
+            if (isPro && proUntilDate) {
+                const date = proUntilDate.toLocaleDateString("ru-RU");
+                const proDateElement = document.getElementById("proUntilDate");
+
+                if (proDateElement) {
+                    proDateElement.textContent = `Подписка активна до: ${date}`;
+                }
+            }
+
         } else {
-            // Новый юзер
-            const today = new Date().toISOString().split("T")[0];
             const email = auth?.currentUser?.email || null;
+
             await setDoc(userRef, {
                 savedIdeas: [],
-                ideasCount: 0,
-                lastResetDate: today,
-                email: user.email,
+                email: email,
                 isPro: false
             });
-            savedIdeas = [];
-            ideasCount = 0;
-            console.log("Создан новый профиль в Firestore");
-        }
-    renderSavedIdeas();
 
-    // Обновляем отображение лимита
-    // Обновляем отображение лимита
-    if (ideasCount >= 3 && !isB2B && !isPro) {
-        renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра");
-    } else if (!currentIdea) {
-    renderState("🎯", "Здесь появится идея", "Нажми «Получить идею»");
-    const btn = document.getElementById("ideaButton");
-    if (btn) btn.classList.add("pulse");
-}
+            savedIdeas = [];
+            isPro = false;
+            updateProUI(false);
+        }
+
+        localStorage.setItem(
+            SAVED_IDEAS_KEY,
+            JSON.stringify(savedIdeas)
+        );
+
+        renderSavedIdeas();
+
+        if (!currentIdea) {
+            renderState("🎯", "Здесь появится идея", "Нажми «Получить идею»");
+
+            const btn = document.getElementById("ideaButton");
+            if (btn) btn.classList.add("pulse");
+        }
+
+        console.log("Данные загружены из Firestore");
 
     } catch (e) {
         console.error("Ошибка загрузки Firestore:", e.message);
@@ -7934,13 +7970,13 @@ async function saveUserData() {
     const { auth, db, doc, setDoc } = window.FirebaseAPI;
     const user = auth?.currentUser;
     if (!user) return;
+
     try {
         await setDoc(doc(db, "users", user.uid), {
             savedIdeas: savedIdeas,
-            ideasCount: ideasCount,
-            lastResetDate: new Date().toISOString().split("T")[0],
-            email: user.email // <--- ВОТ ЭТА СТРОКА ДОЛЖНА БЫТЬ
+            email: user.email
         }, { merge: true });
+
         console.log("Сохранено в Firestore");
     } catch (e) {
         console.error("Ошибка сохранения Firestore:", e.message);
@@ -8031,12 +8067,12 @@ window.addEventListener('load', () => {
             const count = parseInt(localStorage.getItem("trendPilotCount")) || 0;
 
             // Если гость и лимит 3+, выключаем кнопку и пишем текст
-            if (isGuest && count >= 3) {
-                btn.disabled = true;
-                btn.textContent = "Лимит исчерпан";
-                btn.style.opacity = "0.5";
-                btn.style.cursor = "not-allowed";
-            }
+        if (isGuest && count >= 3) {
+            btn.disabled = true;
+            btn.textContent = "Лимит исчерпан";
+            btn.style.opacity = "0.5";
+            btn.style.cursor = "not-allowed";
+        }
         } catch (e) {
             // Если вдруг ошибка — мы просто пишем её в консоль, а сайт продолжает работать
             console.log("Ошибка проверки лимита:", e);
