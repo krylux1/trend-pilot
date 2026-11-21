@@ -7854,14 +7854,26 @@ async function loadUserData(uid) {
             savedIdeas = data.savedIdeas || [];
             ideasCount = data.ideasCount || 0;
             // Внутри функции loadUserData:
-isPro = data.isPro === true;
+let proUntilDate = null;
+
+if (data.proUntil) {
+    proUntilDate = typeof data.proUntil.toDate === "function"
+        ? data.proUntil.toDate()
+        : new Date(data.proUntil);
+}
+
+isPro = data.isPro === true &&
+        proUntilDate !== null &&
+        !isNaN(proUntilDate.getTime()) &&
+        proUntilDate > new Date();
+
 updateProUI(isPro);
 console.log("isPro:", isPro);
 
 const proSection = document.getElementById("proSection");
 const proActiveSection = document.getElementById("proActiveSection");
 
-if (isPro && data.proUntil) {
+if (isPro && proUntilDate) {
     let date;
     if (typeof data.proUntil.toDate === 'function') {
         date = data.proUntil.toDate(); 
