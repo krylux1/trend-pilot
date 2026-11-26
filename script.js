@@ -7998,6 +7998,7 @@ function renderState(icon, title, subtitle, ctaText, ctaAction) {
 
     // === Оплата (ЮKassa) ===
 // === Оплата (ЮKassa) ===
+
 const payBtn = document.getElementById("payBtn");
 
 if (payBtn) {
@@ -8014,32 +8015,39 @@ if (payBtn) {
         payBtn.textContent = "Создаем платеж...";
 
         try {
+            // Получаем подтверждённый Firebase ID Token
+            const idToken = await user.getIdToken();
+
             const response = await fetch("https://trendpilot-pay.de1.netrun.io/", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId: user.uid })
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${idToken}`
+                },
+                body: JSON.stringify({})
             });
 
-                    const data = await response.json();
+            const data = await response.json();
 
-        if (data.confirmation && data.confirmation.confirmation_url) {
-            window.location.href = data.confirmation.confirmation_url;
-        } else {
-            
-                const realError = data.description || data.error || JSON.stringify(data);
-                console.error("Детали ошибки от сервера:", data);
-                alert("Ошибка ЮKassa: " + realError);
-                payBtn.disabled = false;
-                payBtn.textContent = "Оплатить 299 ₽";
+            if (!response.ok) {
+                throw new Error(data.error || `Ошибка сервера: ${response.status}`);
+            }
+
+            if (data.confirmation?.confirmation_url) {
+                window.location.href = data.confirmation.confirmation_url;
+            } else {
+                console.error("Ответ сервера:", data);
+                throw new Error(data.description || data.error || "Не удалось создать платёж");
             }
         } catch (e) {
-            console.error(e);
-            alert("Ошибка сети. Попробуй позже.");
+            console.error("Ошибка оплаты:", e);
+            alert("Не удалось создать платёж: " + e.message);
             payBtn.disabled = false;
             payBtn.textContent = "Оплатить 299 ₽";
         }
-    }); // Закрыли addEventListener
-} // <--- ВОТ ЭТА СКОБКА БЫЛА ПОТЕРЯНА! Она закрывает if (payBtn)
+    });
+}
+ // <--- ВОТ ЭТА СКОБКА БЫЛА ПОТЕРЯНА! Она закрывает if (payBtn)
 
 // Сброс кнопки оплаты, если пользователь вернулся на страницу из кэша (например, из ЮKassa)
 window.addEventListener("pageshow", (event) => {
