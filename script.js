@@ -7635,15 +7635,22 @@ if (!auth || !auth.currentUser) {
                 style="margin-top:3px; flex-shrink:0;"
             >
             <span>
-                Я даю согласие на обработку персональных данных и подтверждаю,
-                что ознакомился с
-                <a
-                    href="/privacy.html"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style="color:#fff; text-decoration:underline;"
-                >Политикой конфиденциальности</a>.
-            </span>
+        Я даю согласие на обработку персональных данных и подтверждаю,
+        что ознакомился с
+        <a
+            href="/privacy.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="color:#fff; text-decoration:underline;"
+        >Политикой конфиденциальности</a>
+        и
+        <a
+            href="/consent.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="color:#fff; text-decoration:underline;"
+        >Согласием на обработку персональных данных</a>.
+        </span>
         </label>
 
         <button
