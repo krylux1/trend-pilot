@@ -7396,6 +7396,7 @@ let savedIdeas = JSON.parse(localStorage.getItem(SAVED_IDEAS_KEY)) || [];
 let currentIdea = null;
 let currentType = localStorage.getItem(TYPE_KEY) || null;
 let isPro = false;
+let unsubscribeUserData = null;
 
 
 
@@ -7836,26 +7837,30 @@ function initAuth() {
         console.warn("Firebase API не готов");
         return;
     }
+
     const { auth, onAuthStateChanged } = window.FirebaseAPI;
 
-        onAuthStateChanged(auth, async (user) => {
+    onAuthStateChanged(auth, (user) => {
+        if (unsubscribeUserData) {
+            unsubscribeUserData();
+            unsubscribeUserData = null;
+        }
+
         if (user) {
             console.log("Пользователь:", user.uid);
-            await loadUserData(user.uid);
+            loadUserData(user.uid);
         } else {
             console.log("Не авторизован");
-            updateProUI(false); 
+            isPro = false;
+            updateProUI(false);
 
-
-            // --- ФИКС ДЛЯ ГОСТЕЙ ---
-            // Загружаем счетчик из памяти (если нет, то 0)
             ideasCount = parseInt(localStorage.getItem(COUNT_KEY)) || 0;
 
-            // Если лимит уже исчерпан - сразу показываем плашку и блокируем кнопку
             if (ideasCount >= 3) {
                 renderState("⏰", "Идеи на сегодня закончились", "Возвращайся завтра");
-                
+
                 const mainButton = document.getElementById("ideaButton") || button;
+
                 if (mainButton) {
                     mainButton.disabled = true;
                     mainButton.textContent = "Лимит исчерпан";
@@ -7863,8 +7868,8 @@ function initAuth() {
                     mainButton.style.cursor = "not-allowed";
                 }
             }
-            // ------------------------
         }
+
         renderSavedIdeas();
     });
 }
@@ -7890,75 +7895,68 @@ function updateProUI(isProStatus) {
     }
 }
 
-async function loadUserData(uid) {
-    const { db, doc, getDoc, setDoc, auth } = window.FirebaseAPI;
+function loadUserData(uid) {
+    const { db, doc, setDoc, auth, onSnapshot } = window.FirebaseAPI;
 
-    try {
-        const userRef = doc(db, "users", uid);
-        const snap = await getDoc(userRef);
+    const userRef = doc(db, "users", uid);
 
-        if (snap.exists()) {
-            const data = snap.data();
+    unsubscribeUserData = onSnapshot(userRef, async (snap) => {
+        try {
+            if (snap.exists()) {
+                const data = snap.data();
 
-            savedIdeas = data.savedIdeas || [];
+                savedIdeas = data.savedIdeas || [];
 
-            let proUntilDate = null;
+                let proUntilDate = null;
 
-            if (data.proUntil) {
-                proUntilDate = typeof data.proUntil.toDate === "function"
-                    ? data.proUntil.toDate()
-                    : new Date(data.proUntil);
-            }
+                if (data.proUntil) {
+                    proUntilDate = typeof data.proUntil.toDate === "function"
+                        ? data.proUntil.toDate()
+                        : new Date(data.proUntil);
+                }
 
-            isPro = data.isPro === true &&
-                proUntilDate !== null &&
-                !isNaN(proUntilDate.getTime()) &&
-                proUntilDate > new Date();
+                isPro = data.isPro === true &&
+                    proUntilDate !== null &&
+                    !isNaN(proUntilDate.getTime()) &&
+                    proUntilDate > new Date();
 
-            updateProUI(isPro);
+                updateProUI(isPro);
 
-            if (isPro && proUntilDate) {
-                const date = proUntilDate.toLocaleDateString("ru-RU");
                 const proDateElement = document.getElementById("proUntilDate");
 
                 if (proDateElement) {
-                    proDateElement.textContent = `Подписка активна до: ${date}`;
+                    proDateElement.textContent = isPro
+                        ? `Подписка активна до: ${proUntilDate.toLocaleDateString("ru-RU")}`
+                        : "";
                 }
+
+            } else {
+                const email = auth?.currentUser?.email || null;
+
+                await setDoc(userRef, {
+                    savedIdeas: [],
+                    email: email,
+                    isPro: false
+                });
+
+                return;
             }
 
-        } else {
-            const email = auth?.currentUser?.email || null;
+            localStorage.setItem(
+                SAVED_IDEAS_KEY,
+                JSON.stringify(savedIdeas)
+            );
 
-            await setDoc(userRef, {
-                savedIdeas: [],
-                email: email,
-                isPro: false
-            });
+            renderSavedIdeas();
 
-            savedIdeas = [];
-            isPro = false;
-            updateProUI(false);
+            console.log("Данные пользователя обновлены из Firestore");
+
+        } catch (e) {
+            console.error("Ошибка обработки данных Firestore:", e);
         }
-
-        localStorage.setItem(
-            SAVED_IDEAS_KEY,
-            JSON.stringify(savedIdeas)
-        );
-
-        renderSavedIdeas();
-
-        if (!currentIdea) {
-            renderState("🎯", "Здесь появится идея", "Нажми «Получить идею»");
-
-            const btn = document.getElementById("ideaButton");
-            if (btn) btn.classList.add("pulse");
-        }
-
-        console.log("Данные загружены из Firestore");
-
-    } catch (e) {
-        console.error("Ошибка загрузки Firestore:", e.message);
-    }
+    }, (error) => {
+        console.error("Ошибка отслеживания Firestore:", error);
+    });
 }
 
 

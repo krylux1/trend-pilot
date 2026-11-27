@@ -1,7 +1,7 @@
 // === Firebase SDK ===
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDE3ADMpDToXs-T1g42ed-JfKM8_Us8KW4",
@@ -24,6 +24,7 @@ window.FirebaseAPI = {
     getDoc,
     setDoc,
     updateDoc,
+    onSnapshot,
     GoogleAuthProvider,
     signInWithPopup,
     signOut,
