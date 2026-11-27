@@ -7611,30 +7611,97 @@ function renderSavedIdeas() {
     const auth = window.FirebaseAPI?.auth;
 
     // 1. Если юзер НЕ вошёл — показываем кнопку входа
-    if (!auth || !auth.currentUser) {
-        savedIdeasElement.innerHTML = `
-            <p style="color:#888; margin-bottom:12px;">Войди, чтобы сохранять идеи.</p>
-            <button class="auth-btn" id="loginBtnInline">Войти через Google</button>
-        `;
-        const btn = document.getElementById("loginBtnInline");
-        if (btn) {
-            btn.addEventListener("click", async () => {
-    try {
-        const { GoogleAuthProvider, signInWithPopup } = window.FirebaseAPI;
+    
+// 1. If user is NOT logged in — show consent and login
+if (!auth || !auth.currentUser) {
+    savedIdeasElement.innerHTML = `
+        <p style="color:#888; margin-bottom:12px;">
+            Войди, чтобы сохранять идеи.
+        </p>
 
-        const provider = new GoogleAuthProvider();
+        <label style="
+            display:flex;
+            align-items:flex-start;
+            gap:10px;
+            margin-bottom:16px;
+            color:#ccc;
+            font-size:13px;
+            line-height:1.5;
+            cursor:pointer;
+        ">
+            <input
+                type="checkbox"
+                id="privacyConsent"
+                style="margin-top:3px; flex-shrink:0;"
+            >
+            <span>
+                Я даю согласие на обработку персональных данных и подтверждаю,
+                что ознакомился с
+                <a
+                    href="/privacy.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="color:#fff; text-decoration:underline;"
+                >Политикой конфиденциальности</a>.
+            </span>
+        </label>
 
-        signInWithPopup(auth, provider).catch(e => {
-            console.error("Ошибка входа:", e.message);
-        });
+        <button
+            class="auth-btn"
+            id="loginBtnInline"
+            disabled
+            style="opacity:0.5; cursor:not-allowed;"
+        >
+            Войти через Google
+        </button>
+    `;
 
-    } catch (e) {
-        console.error("Ошибка входа:", e.message);
-    }
+    const checkbox = document.getElementById("privacyConsent");
+    const btn = document.getElementById("loginBtnInline");
+
+    checkbox.addEventListener("change", () => {
+        btn.disabled = !checkbox.checked;
+        btn.style.opacity = checkbox.checked ? "1" : "0.5";
+        btn.style.cursor = checkbox.checked ? "pointer" : "not-allowed";
     });
+
+    btn.addEventListener("click", async () => {
+        if (!checkbox.checked) return;
+
+        try {
+            const {
+                GoogleAuthProvider,
+                signInWithPopup,
+                doc,
+                setDoc,
+                db
+            } = window.FirebaseAPI;
+
+            const provider = new GoogleAuthProvider();
+            const result = await signInWithPopup(auth, provider);
+
+            await setDoc(
+                doc(db, "users", result.user.uid),
+                {
+                    privacyConsent: {
+                        version: "1",
+                        acceptedAt: new Date().toISOString()
+                    }
+                },
+                { merge: true }
+            );
+
+            console.log("Согласие на обработку данных сохранено");
+
+        } catch (e) {
+            console.error("Ошибка входа или сохранения согласия:", e);
+            alert("Не удалось завершить вход. Попробуй ещё раз.");
         }
-        return;
-    }
+    });
+
+    return;
+}
+
 
     // 2. Юзер вошёл — показываем имя и "Выйти"
     const user = auth.currentUser;
