@@ -1,0 +1,260 @@
+
+/* ========================================
+   TREND PILOT — LEGAL PAGES
+======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    background:
+        radial-gradient(
+            ellipse at 50% 0%,
+            rgba(68, 105, 220, .10),
+            transparent 45%
+        ),
+        #080b14;
+
+    color: #f4f6ff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+/* DOCUMENT */
+
+.container {
+    position: relative;
+
+    width: min(850px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 65px 55px 75px;
+
+    flex: 1;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(21, 30, 52, .78),
+            rgba(12, 17, 30, .88)
+        );
+
+    border: 1px solid rgba(133, 153, 255, .13);
+    border-radius: 24px;
+
+    box-shadow:
+        0 25px 80px rgba(0, 0, 0, .18),
+        inset 0 1px 0 rgba(255,255,255,.035);
+
+    margin-top: 55px;
+    margin-bottom: 90px;
+}
+
+/* BACK LINK */
+
+.back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-bottom: 38px;
+
+    color: #8998b5;
+    font-size: 13px;
+    font-weight: 500;
+
+    text-decoration: none;
+    transition: color .2s ease;
+}
+
+.back:hover {
+    color: #b7caff;
+}
+
+/* HEADINGS */
+
+.container h1 {
+    margin-bottom: 22px;
+
+    color: #f5f7ff;
+    font-size: clamp(28px, 4vw, 36px);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -1.5px;
+}
+
+.container h2 {
+    margin-top: 38px;
+    margin-bottom: 15px;
+
+    color: #e8edff;
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: -.3px;
+}
+
+/* TEXT */
+
+.container p {
+    margin-bottom: 17px;
+
+    color: #aab5cb;
+    font-size: 14px;
+    line-height: 1.9;
+}
+
+.container p strong {
+    color: #e2e9fa;
+    font-weight: 650;
+}
+
+.container ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    margin: 12px 0 22px;
+    padding-left: 23px;
+}
+
+.container li {
+    padding-left: 5px;
+
+    color: #aab5cb;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.container li::marker {
+    color: #789aff;
+}
+
+/* LINKS */
+
+.container a:not(.back) {
+    color: #9dbaff;
+    text-decoration: none;
+
+    text-underline-offset: 4px;
+    transition: color .2s ease;
+}
+
+.container a:not(.back):hover {
+    color: #c4d5ff;
+    text-decoration: underline;
+}
+
+/* DOCUMENT DATE */
+
+.container > p:first-of-type {
+    margin-bottom: 28px;
+    color: #7788a8;
+    font-size: 12px;
+}
+
+/* FOOTER — LEGACY FOOTER STYLING */
+
+body > footer {
+    border-top: 1px solid rgba(133, 153, 255, .13) !important;
+
+    background:
+        radial-gradient(
+            ellipse at 50% 0%,
+            rgba(77, 104, 255, .07),
+            transparent 55%
+        ),
+        #090c14 !important;
+
+    color: #8590a8;
+}
+
+body > footer a {
+    color: #8590a8 !important;
+    text-decoration: none;
+    transition: color .2s ease;
+}
+
+body > footer a:hover {
+    color: #c0d0ff !important;
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+    .container {
+        width: calc(100% - 28px);
+        margin-top: 25px;
+        margin-bottom: 55px;
+        padding: 32px 23px 45px;
+        border-radius: 19px;
+    }
+
+    .container h1 {
+        font-size: 27px;
+        letter-spacing: -.9px;
+    }
+
+    .container h2 {
+        margin-top: 30px;
+        font-size: 18px;
+    }
+
+    .container p,
+    .container li {
+        font-size: 13px;
+    }
+
+    .back {
+        margin-bottom: 30px;
+    }
+
+    body > footer {
+        padding: 35px 20px !important;
+    }
+
+    body > footer div[style*="position: absolute"] {
+        position: static !important;
+        transform: none !important;
+        justify-content: center;
+        margin-top: 25px;
+    }
+}
+
+@media (max-width: 390px) {
+    .container {
+        padding: 28px 18px 38px;
+    }
+
+    .container h1 {
+        font-size: 24px;
+    }
+}
+
+.site-footer .footer-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0;
+    gap: 0;
+}
+
+.site-footer .footer-logo {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    line-height: 1;
+}
+
+.site-footer .footer-description {
+    margin-top: 18px;
+}

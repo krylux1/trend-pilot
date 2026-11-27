@@ -7613,101 +7613,226 @@ function renderSavedIdeas() {
     // 1. Если юзер НЕ вошёл — показываем кнопку входа
     
 // 1. If user is NOT logged in — show consent and login
+
 if (!auth || !auth.currentUser) {
     savedIdeasElement.innerHTML = `
-        <p style="color:#888; margin-bottom:12px;">
-            Войди, чтобы сохранять идеи.
-        </p>
+        <div style="max-width:340px;margin:0 auto;">
 
-        <label style="
-            display:flex;
-            align-items:flex-start;
-            gap:10px;
-            margin-bottom:16px;
-            color:#ccc;
-            font-size:13px;
-            line-height:1.5;
-            cursor:pointer;
-        ">
-            <input
-                type="checkbox"
-                id="privacyConsent"
-                style="margin-top:3px; flex-shrink:0;"
-            >
-            <span>
-        Я даю согласие на обработку персональных данных и подтверждаю,
-        что ознакомился с
-        <a
-            href="/privacy.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            style="color:#fff; text-decoration:underline;"
-        >Политикой конфиденциальности</a>
-        и
-        <a
-            href="/consent.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            style="color:#fff; text-decoration:underline;"
-        >Согласием на обработку персональных данных</a>.
-        </span>
-        </label>
+            <div style="text-align:center;margin-bottom:18px;">
+                <div id="authTitle" style="font-size:20px;font-weight:600;color:white;">
+                    Сохраняй свои идеи
+                </div>
+                <div id="authSubtitle" style="font-size:13px;color:#888;margin-top:5px;">
+                    Войди в свой аккаунт Trend Pilot
+                </div>
+            </div>
 
-        <button
-            class="auth-btn"
-            id="loginBtnInline"
-            disabled
-            style="opacity:0.5; cursor:not-allowed;"
-        >
-            Войти через Google
-        </button>
+            <input id="authEmail" type="email" placeholder="Email"
+                autocomplete="email"
+                style="width:100%;padding:13px;margin-bottom:10px;border-radius:10px;
+                background:#171717;color:white;border:1px solid #333;box-sizing:border-box;">
+
+            <input id="authPassword" type="password" placeholder="Пароль"
+                autocomplete="current-password"
+                style="width:100%;padding:13px;margin-bottom:8px;border-radius:10px;
+                background:#171717;color:white;border:1px solid #333;box-sizing:border-box;">
+
+            <div style="text-align:right;margin-bottom:14px;">
+                <button type="button" id="forgotPassword"
+                    style="background:none;border:none;color:#888;font-size:12px;cursor:pointer;">
+                    Забыли пароль?
+                </button>
+            </div>
+
+            <label id="consentWrap" style="display:none;align-items:flex-start;gap:8px;
+                color:#888;font-size:11px;line-height:1.45;margin-bottom:12px;">
+                <input type="checkbox" id="privacyConsent" style="margin-top:2px;flex-shrink:0;">
+                <span>
+                    Согласен на обработку персональных данных и ознакомлен с
+                    <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style="color:#ccc;">политикой</a>
+                    и <a href="/consent.html" target="_blank" rel="noopener noreferrer" style="color:#ccc;">согласием</a>.
+                </span>
+            </label>
+
+            <button type="button" id="authSubmit" class="auth-btn"
+                style="width:100%;margin-bottom:14px;">
+                Войти
+            </button>
+
+            <div style="display:flex;align-items:center;gap:12px;color:#666;font-size:12px;margin-bottom:14px;">
+                <div style="height:1px;background:#333;flex:1;"></div>
+                или
+                <div style="height:1px;background:#333;flex:1;"></div>
+            </div>
+
+            <button type="button" id="googleLogin" class="auth-btn" style="width:100%;">
+                <svg width="18" height="18" viewBox="0 0 48 48"
+                    style="vertical-align:middle;margin-right:8px;">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 3.06 13.22l7.98 6.19C12.93 13.72 18.02 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.74 7.18l7.73 6C44.43 37.86 46.98 31.7 46.98 24.55z"/>
+                    <path fill="#FBBC05" d="M10.04 28.59A14.4 14.4 0 0 1 9.25 24c0-1.59.27-3.13.79-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.87.93 7.52 2.56 10.78l7.48-6.19z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.14 1.44-4.88 2.3-8.18 2.3-5.98 0-11.07-4.22-12.96-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                </svg>
+                Продолжить с Google
+            </button>
+
+            <div style="text-align:center;margin-top:18px;font-size:13px;color:#888;">
+                <span id="authSwitchText">Нет аккаунта?</span>
+                <button type="button" id="authSwitch"
+                    style="background:none;border:none;color:white;cursor:pointer;font-weight:600;">
+                    Зарегистрироваться
+                </button>
+            </div>
+
+            <p id="authMessage" style="color:#aaa;font-size:13px;text-align:center;margin-top:12px;"></p>
+        </div>
     `;
 
+    const emailInput = document.getElementById("authEmail");
+    const passwordInput = document.getElementById("authPassword");
+    const submitBtn = document.getElementById("authSubmit");
+    const message = document.getElementById("authMessage");
+    const switchBtn = document.getElementById("authSwitch");
+    const switchText = document.getElementById("authSwitchText");
+    const title = document.getElementById("authTitle");
+    const subtitle = document.getElementById("authSubtitle");
+    const forgotBtn = document.getElementById("forgotPassword");
+    const consentWrap = document.getElementById("consentWrap");
     const checkbox = document.getElementById("privacyConsent");
-    const btn = document.getElementById("loginBtnInline");
 
-    checkbox.addEventListener("change", () => {
-        btn.disabled = !checkbox.checked;
-        btn.style.opacity = checkbox.checked ? "1" : "0.5";
-        btn.style.cursor = checkbox.checked ? "pointer" : "not-allowed";
+    let authMode = "login";
+
+    function showMessage(text, color = "#aaa") {
+        message.textContent = text;
+        message.style.color = color;
+    }
+
+    function setMode(mode) {
+        authMode = mode;
+
+        const isLogin = mode === "login";
+
+        title.textContent = isLogin ? "Твои идеи всегда под рукой" : "Создай аккаунт";
+
+        subtitle.textContent = isLogin
+        ? "Войди, чтобы получить доступ к сохранённым идеям"
+        : "Сохраняй идеи и возвращайся к ним";
+        submitBtn.textContent = isLogin ? "Войти" : "Зарегистрироваться";
+        passwordInput.autocomplete = isLogin ? "current-password" : "new-password";
+
+        forgotBtn.style.display = isLogin ? "inline-block" : "none";
+        consentWrap.style.display = isLogin ? "none" : "flex";
+
+        switchText.textContent = isLogin ? "Нет аккаунта?" : "Уже есть аккаунт?";
+        switchBtn.textContent = isLogin ? "Зарегистрироваться" : "Войти";
+
+        showMessage("");
+    }
+
+    switchBtn.addEventListener("click", () => {
+        setMode(authMode === "login" ? "register" : "login");
     });
 
-    btn.addEventListener("click", async () => {
-        if (!checkbox.checked) return;
+    async function saveConsent(user) {
+        const { db, doc, setDoc } = window.FirebaseAPI;
+
+        await setDoc(doc(db, "users", user.uid), {
+            privacyConsent: {
+                version: "1",
+                acceptedAt: new Date().toISOString()
+            }
+        }, { merge: true });
+    }
+
+    submitBtn.addEventListener("click", async () => {
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+
+        if (!email || !password) {
+            showMessage("Введи email и пароль.", "#ff7777");
+            return;
+        }
+
+        if (authMode === "register" && !checkbox.checked) {
+            showMessage("Подтверди согласие на обработку данных.", "#ff7777");
+            return;
+        }
+
+        const api = window.FirebaseAPI;
+
+        submitBtn.disabled = true;
+        showMessage("Подождите...");
 
         try {
-            const {
-                GoogleAuthProvider,
-                signInWithPopup,
-                doc,
-                setDoc,
-                db
-            } = window.FirebaseAPI;
+            if (authMode === "register") {
+                const result = await api.createUserWithEmailAndPassword(auth, email, password);
 
+                await saveConsent(result.user);
+                await api.sendEmailVerification(result.user);
+
+                showMessage("Аккаунт создан! Письмо для подтверждения отправлено.", "#8ee6a0");
+            } else {
+                await api.signInWithEmailAndPassword(auth, email, password);
+            }
+
+        } catch (e) {
+            console.error("Ошибка авторизации:", e);
+
+            const errors = {
+                "auth/email-already-in-use": "Этот email уже зарегистрирован. Попробуй войти.",
+                "auth/invalid-email": "Некорректный email.",
+                "auth/weak-password": "Пароль должен содержать минимум 6 символов.",
+                "auth/invalid-credential": "Неверный email или пароль.",
+                "auth/user-disabled": "Аккаунт заблокирован.",
+                "auth/too-many-requests": "Слишком много попыток. Попробуй позже.",
+                "auth/network-request-failed": "Проверь подключение к интернету."
+            };
+
+            showMessage(errors[e.code] || "Не удалось выполнить действие. Попробуй ещё раз.", "#ff7777");
+        } finally {
+            submitBtn.disabled = false;
+        }
+    });
+
+    forgotBtn.addEventListener("click", async () => {
+        const email = emailInput.value.trim();
+
+        if (!email) {
+            showMessage("Сначала введи email.", "#ff7777");
+            return;
+        }
+
+        try {
+            await window.FirebaseAPI.sendPasswordResetEmail(auth, email);
+            showMessage("Письмо для восстановления пароля отправлено.", "#8ee6a0");
+        } catch (e) {
+            console.error(e);
+            showMessage("Не удалось отправить письмо. Проверь email.", "#ff7777");
+        }
+    });
+
+    document.getElementById("googleLogin").addEventListener("click", async () => {
+        try {
+            const accepted = window.confirm(
+                "Продолжая, вы соглашаетесь на обработку персональных данных и подтверждаете ознакомление с Политикой конфиденциальности и Согласием на обработку персональных данных."
+            );
+
+            if (!accepted) return;
+
+            const { GoogleAuthProvider, signInWithPopup } = window.FirebaseAPI;
             const provider = new GoogleAuthProvider();
             const result = await signInWithPopup(auth, provider);
 
-            await setDoc(
-                doc(db, "users", result.user.uid),
-                {
-                    privacyConsent: {
-                        version: "1",
-                        acceptedAt: new Date().toISOString()
-                    }
-                },
-                { merge: true }
-            );
-
-            console.log("Согласие на обработку данных сохранено");
-
+            await saveConsent(result.user);
         } catch (e) {
-            console.error("Ошибка входа или сохранения согласия:", e);
-            alert("Не удалось завершить вход. Попробуй ещё раз.");
+            console.error("Ошибка Google-входа:", e);
+            showMessage("Не удалось войти через Google. Попробуй ещё раз.", "#ff7777");
         }
     });
 
     return;
 }
+
 
 
     // 2. Юзер вошёл — показываем имя и "Выйти"
@@ -8100,14 +8225,13 @@ if (payBtn) {
             });
 
             const data = await response.json();
-
             if (!response.ok) {
-                throw new Error(data.error || `Ошибка сервера: ${response.status}`);
+            throw new Error(data.error || `Ошибка сервера: ${response.status}`);
             }
 
-            if (data.confirmation?.confirmation_url) {
-                window.location.href = data.confirmation.confirmation_url;
-            } else {
+        if (data.confirmation_url) {
+        window.location.href = data.confirmation_url;
+        } else {
                 console.error("Ответ сервера:", data);
                 throw new Error(data.description || data.error || "Не удалось создать платёж");
             }
@@ -8115,7 +8239,7 @@ if (payBtn) {
             console.error("Ошибка оплаты:", e);
             alert("Не удалось создать платёж: " + e.message);
             payBtn.disabled = false;
-            payBtn.textContent = "Оплатить 299 ₽";
+            payBtn.textContent = "Оплатить";
         }
     });
 }
@@ -8125,7 +8249,7 @@ if (payBtn) {
 window.addEventListener("pageshow", (event) => {
     if (payBtn) {
         payBtn.disabled = false;
-        payBtn.textContent = "Оплатить 299 ₽";
+        payBtn.textContent = "Оплатить";
     }
 });
 
@@ -8157,3 +8281,4 @@ window.addEventListener('load', () => {
         }
     }, 1000); 
 });
+
